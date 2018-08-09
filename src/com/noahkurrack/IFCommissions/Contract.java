@@ -39,6 +39,11 @@ public class Contract {
         int endRow = -1;
         for (int i = 0; i < sheet.getLastRowNum(); i++) {
             if (sheet.getRow(i).getCell(0) == null) continue;
+            try {
+                sheet.getRow(i).getCell(0).getStringCellValue();
+            } catch (IllegalStateException e) {
+                continue;
+            }
             if (sheet.getRow(i).getCell(0).getStringCellValue().equalsIgnoreCase("Date")){
                 endRow = i;
             }
