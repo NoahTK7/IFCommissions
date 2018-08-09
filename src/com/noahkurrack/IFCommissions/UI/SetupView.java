@@ -5,24 +5,25 @@ import com.noahkurrack.IFCommissions.IFCommissions;
 import javax.swing.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.event.WindowEvent;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 
 public class SetupView {
     private JPanel setupPanel;
-    private JTextField pathTextField;
+    private JTextField inPathTextField;
     private JButton browseButton;
-    private JLabel fileFolderLabel;
-    private JList filesList;
+    private JList<CheckListItem> filesList;
     private JButton runButton;
     private JButton cancelButton;
     private JCheckBox outputSpreadsheetCheckBox;
     private JCheckBox outputEmployeeSpreadsheetCheckBox;
     private JButton editConfigButton;
+    private JTextField outPathTextField;
+    private JButton browseOutButton;
 
     private File currentDirectory;
+    private File outDirectory;
 
     private IFCommissions instance;
 
@@ -32,17 +33,22 @@ public class SetupView {
         currentDirectory = new File(".");
 
         browseButton.addActionListener(e -> {
-            selectFile();
+            selectInputFolder();
+        });
+        browseOutButton.addActionListener(e -> {
+            selectOutputFolder();
         });
         runButton.addActionListener(e -> {
             saveData();
             instance.run();
+            //IFCommissions.getGui().setRunView();
         });
         cancelButton.addActionListener(e -> {
             IFCommissions.getGui().close();
         });
         editConfigButton.addActionListener(e -> {
             //TODO
+            //IFCommissions.getGui().setConfigView();
         });
     }
 
@@ -51,14 +57,13 @@ public class SetupView {
     }
 
     //adapted from https://stackoverflow.com/questions/32723173/how-to-open-a-file-after-clicking-the-open-button-in-jfilechooser?lq=1
-    private void selectFile() {
+    private void selectInputFolder() {
         JFileChooser chooser = new JFileChooser(new File("."));
         chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-        // optionally set chooser options ...
         if (chooser.showOpenDialog(setupPanel.getParent()) == JFileChooser.APPROVE_OPTION) {
             File direc = chooser.getSelectedFile();
             try {
-                pathTextField.setText(direc.getCanonicalPath());
+                inPathTextField.setText(direc.getCanonicalPath());
             } catch (IOException e) {
                 //TODO: error
                 e.printStackTrace();
@@ -68,22 +73,40 @@ public class SetupView {
         }
     }
 
-    private void populateFileList() {
-        DefaultListModel listModel = new DefaultListModel();
-        if (currentDirectory.listFiles() == null){
-            //TODO error: no files
-            return;
-        }
-        for (File file: currentDirectory.listFiles()) {
-            if (file.getName().contains(new String(".xlsx"))){
-                listModel.addElement(new CheckListItem(file));
+    private void selectOutputFolder() {
+        JFileChooser chooser = new JFileChooser(new File("."));
+        chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+        if (chooser.showOpenDialog(setupPanel.getParent()) == JFileChooser.APPROVE_OPTION) {
+            File direc = chooser.getSelectedFile();
+            try {
+                outPathTextField.setText(direc.getCanonicalPath());
+            } catch (IOException e) {
+                //TODO: error
+                e.printStackTrace();
             }
+            outDirectory = direc;
         }
+    }
+
+    private void populateFileList() {
+        DefaultListModel<CheckListItem> listModel = new DefaultListModel<>();
+        if (currentDirectory.listFiles() != null){
+            listModel.add(0, new CheckListItem());
+            for (File file: currentDirectory.listFiles()) {
+                if (file.getName().contains(".xlsx")){
+                    listModel.addElement(new CheckListItem(file));
+                }
+            }
+        } else {
+            //TODO: error no files "please select at least one file"
+        }
+
         filesList.setModel(listModel);
     }
 
+    //custom creation of list component to support check box selection
     private void createUIComponents() {
-        filesList = new JList();
+        filesList = new JList<CheckListItem>();
         filesList.setCellRenderer(new CheckListRenderer());
         filesList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         filesList.addMouseListener(new MouseAdapter() {
@@ -95,6 +118,20 @@ public class SetupView {
                 CheckListItem item = (CheckListItem) list.getModel().getElementAt(index);
                 item.setSelected(!item.isSelected()); // Toggle selected state
                 list.repaint(list.getCellBounds(index, index));// Repaint cell
+                //logic for select all item at top
+                if (index == 0) {
+                    for (int i = 1; i < list.getModel().getSize(); i++) {
+                        CheckListItem item1 = (CheckListItem) list.getModel().getElementAt(i);
+                        item1.setSelected(item.isSelected()); // Toggle selected state
+                        list.repaint(list.getCellBounds(i, i));// Repaint cell
+                    }
+                } else {
+                    if (!item.isSelected()) {
+                        CheckListItem item1 = (CheckListItem) list.getModel().getElementAt(0);
+                        item1.setSelected(false);
+                        list.repaint(list.getCellBounds(0, 0));// Repaint cell
+                    }
+                }
             }
         });
     }
@@ -102,8 +139,8 @@ public class SetupView {
     private void saveData() {
         //active files
         ArrayList<File> temp = new ArrayList<>();
-        for (int i = 0; i < filesList.getModel().getSize(); i++) {
-            CheckListItem item = (CheckListItem) filesList.getModel().getElementAt(i);
+        for (int i = 1; i < filesList.getModel().getSize(); i++) {
+            CheckListItem item = filesList.getModel().getElementAt(i);
             if (item.isSelected()){
                 temp.add(item.getFile());
             }
@@ -114,6 +151,6 @@ public class SetupView {
         //employee spreadsheet
         instance.setEmployeeSpreadsheet(outputEmployeeSpreadsheetCheckBox.isSelected());
         //directory
-        instance.setDirectory(currentDirectory);
+        instance.setOutputDirectory(outDirectory);
     }
 }

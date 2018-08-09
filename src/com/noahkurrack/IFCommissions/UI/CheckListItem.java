@@ -2,7 +2,7 @@ package com.noahkurrack.IFCommissions.UI;
 
 import java.io.File;
 
-//credit: http://www.java2s.com/Tutorials/Java/Swing_How_to/JList/Create_JList_of_CheckBox.htm
+//adapted from http://www.java2s.com/Tutorials/Java/Swing_How_to/JList/Create_JList_of_CheckBox.htm
 public class CheckListItem {
 
     private String label;
@@ -12,6 +12,12 @@ public class CheckListItem {
     public CheckListItem(File file) {
         this.label = file.getName();
         this.file = file;
+    }
+
+    //custom select all item
+    public CheckListItem() {
+        this.label = "Select all";
+        this.file = null;
     }
 
     public boolean isSelected() {

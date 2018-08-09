@@ -15,7 +15,7 @@ public class IFCommissions {
     private static IFCommissions instance;
     private static CommissionsGUI gui;
 
-    private File directory;
+    private File outputDirectory;
 
     private ArrayList<File> activeFiles;
     private boolean spreadsheet;
@@ -30,15 +30,6 @@ public class IFCommissions {
         IFCommissions instance = new IFCommissions();
         instance.setInstance(instance);
 
-        /*
-        Config.loadConfig();
-
-        File directory = new File(Config.inputPath);
-        if (!directory.exists()) {
-            directory.mkdir();
-        }
-        */
-
         EventQueue.invokeLater(() -> {
             gui = new CommissionsGUI();
             gui.setVisible(true);
@@ -50,7 +41,7 @@ public class IFCommissions {
     public IFCommissions() {
         contracts = new ArrayList<>();
 
-        directory = new File(".");
+        outputDirectory = new File(".");
         activeFiles = new ArrayList<>();
         spreadsheet = true;
         employeeSpreadsheet = false;
@@ -70,10 +61,6 @@ public class IFCommissions {
 
     public void run() {
         //create contract object for each file in directory
-        if (directory.listFiles() == null){
-            //error: no files
-            return;
-        }
         for (File file: activeFiles) {
             Workbook workbook = null;
             try {
@@ -105,8 +92,8 @@ public class IFCommissions {
         //write workbook to file (name with timestamp)
     }
 
-    public void setDirectory(File directory) {
-        this.directory = directory;
+    public void setOutputDirectory(File directory) {
+        this.outputDirectory = directory;
     }
 
     public void setActiveFiles(ArrayList<File> activeFiles) {
@@ -121,3 +108,5 @@ public class IFCommissions {
         this.employeeSpreadsheet = employeeSpreadsheet;
     }
 }
+
+//TODO: parse items costs (config?); 
