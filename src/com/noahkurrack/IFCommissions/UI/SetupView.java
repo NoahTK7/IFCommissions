@@ -41,14 +41,14 @@ public class SetupView {
         runButton.addActionListener(e -> {
             saveData();
             instance.run();
-            //IFCommissions.getGui().setRunView();
+            IFCommissions.getGui().setRunView();
         });
         cancelButton.addActionListener(e -> {
             IFCommissions.getGui().close();
         });
         editConfigButton.addActionListener(e -> {
             //TODO
-            //IFCommissions.getGui().setConfigView();
+            IFCommissions.getGui().setConfigView();
         });
     }
 

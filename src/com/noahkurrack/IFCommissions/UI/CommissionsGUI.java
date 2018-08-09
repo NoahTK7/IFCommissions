@@ -1,22 +1,30 @@
 package com.noahkurrack.IFCommissions.UI;
 
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
 public class CommissionsGUI extends JFrame {
 
-    private SetupView setupView;
-    private ConfigView configView;
-    private RunView runView;
+    private JPanel cards;
+    private CardLayout cardLayout;
 
     private int width = 650;
     private int height = 400;
 
     public CommissionsGUI() {
-        setupView = new SetupView();
-        configView = new ConfigView();
-        runView = new RunView();
+        cards = new JPanel(new CardLayout());
+        cardLayout = (CardLayout)(cards.getLayout());
+
+        SetupView setupView = new SetupView();
+        ConfigView configView = new ConfigView();
+        RunView runView = new RunView();
+
+        cards.add(setupView.getSetupPanel(), "setup");
+        cards.add(configView.getConfigPanel(), "config");
+        cards.add(runView.getRunPanel(), "run");
+
         init();
     }
 
@@ -25,7 +33,10 @@ public class CommissionsGUI extends JFrame {
         setSize(width,height);
         setLocationRelativeTo(null);
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-        setContentPane(setupView.getSetupPanel());
+
+        setContentPane(cards);
+
+        cardLayout.show(cards, "setup");
 
         this.addWindowListener(new WindowAdapter() {
             @Override
@@ -36,24 +47,17 @@ public class CommissionsGUI extends JFrame {
         });
     }
 
-    /*
     public void setConfigView() {
-        this.removeAll();
-        this.setContentPane(this.configView.getConfigPanel());
-        this.revalidate();
-        this.setVisible(true);
+        cardLayout.show(cards, "config");
     }
 
     public void setRunView() {
-        this.getContentPane().removeAll();
-        this.getContentPane().add(this.runView.getRunPanel());
+        cardLayout.show(cards, "run");
     }
 
     public void setSetupView() {
-        this.getContentPane().removeAll();
-        this.getContentPane().add(this.setupView.getSetupPanel());
+        cardLayout.show(cards, "setup");
     }
-    */
 
     public void close() {
         this.dispatchEvent(new WindowEvent(this, WindowEvent.WINDOW_CLOSING));
