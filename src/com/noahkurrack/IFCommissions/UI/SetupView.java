@@ -1,6 +1,8 @@
 package com.noahkurrack.IFCommissions.UI;
 
 import com.noahkurrack.IFCommissions.IFCommissions;
+import com.noahkurrack.IFCommissions.UI.util.CheckListItem;
+import com.noahkurrack.IFCommissions.UI.util.CheckListRenderer;
 
 import javax.swing.*;
 import java.awt.event.MouseAdapter;
@@ -56,7 +58,6 @@ public class SetupView {
         });
         editConfigButton.addActionListener(e -> {
             IFCommissions.getGui().setConfigView();
-            //TODO
         });
     }
 

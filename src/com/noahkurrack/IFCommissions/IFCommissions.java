@@ -1,6 +1,7 @@
 package com.noahkurrack.IFCommissions;
 
 import com.noahkurrack.IFCommissions.UI.CommissionsGUI;
+import com.noahkurrack.IFCommissions.data.Contract;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.usermodel.WorkbookFactory;
@@ -14,6 +15,7 @@ public class IFCommissions {
 
     private static IFCommissions instance;
     private static CommissionsGUI gui;
+    private static ConfigManager configManager;
 
     private File outputDirectory;
 
@@ -30,9 +32,7 @@ public class IFCommissions {
         IFCommissions instance = new IFCommissions();
         instance.setInstance(instance);
 
-        // config file
-        // check if one exists
-        // if does: load; if not, create default
+        configManager = new ConfigManager();
 
         EventQueue.invokeLater(() -> {
             gui = new CommissionsGUI();
@@ -61,6 +61,10 @@ public class IFCommissions {
 
     public static CommissionsGUI getGui() {
         return gui;
+    }
+
+    public static ConfigManager getConfigManager() {
+        return configManager;
     }
 
     public void run() {
@@ -99,7 +103,7 @@ public class IFCommissions {
             System.out.println(contract.getCustomerInfo() + " " + contract.getOrderNum() + " " + contract.getSalesRep());
         }
         //look for directory
-        //if none, create directory (from config)
+        //if none, create directory (from configManager)
         //write workbook to file (name with timestamp)
     }
 
@@ -120,4 +124,4 @@ public class IFCommissions {
     }
 }
 
-//TODO: parse items costs (config?)
+//TODO: parse items costs (configManager?)

@@ -1,6 +1,6 @@
 package com.noahkurrack.IFCommissions.UI;
 
-import com.noahkurrack.IFCommissions.Contract;
+import com.noahkurrack.IFCommissions.data.Contract;
 
 import javax.swing.*;
 

@@ -1,4 +1,4 @@
-package com.noahkurrack.IFCommissions;
+package com.noahkurrack.IFCommissions.data;
 
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
