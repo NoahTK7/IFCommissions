@@ -17,8 +17,11 @@ public class Contract {
     private ArrayList<String> parts;
     private double subtotal;
 
+    private double commission;
+
     public Contract(Workbook wb) {
         this.parts = new ArrayList<>();
+        this.commission = -1;
 
         this.workbook = wb;
         extractData();
@@ -59,14 +62,15 @@ public class Contract {
         System.out.print(subtotal + "\n");
     }
 
-    private double calculateCommission() {
+    private void calculateCommission() {
         int finalCommission = 0;
-        //algorithm
+        // TODO
+        // algorithm
             //calculate cost
             //calculate markup percentage
             //determine commission percentage
             //calculate commission
-        return finalCommission;
+        this.commission = finalCommission;
     }
 
     //Getters
@@ -80,5 +84,17 @@ public class Contract {
 
     public String getSalesRep() {
         return salesRep;
+    }
+
+    public ArrayList<String> getParts() {
+        return parts;
+    }
+
+    public double getSubtotal() {
+        return subtotal;
+    }
+
+    public double getCommission() {
+        return commission;
     }
 }

@@ -10,16 +10,20 @@ public class CommissionsGUI extends JFrame {
     private JPanel cards;
     private CardLayout cardLayout;
 
+    private SetupView setupView;
+    private ConfigView configView;
+    private RunView runView;
+
     private int width = 650;
     private int height = 400;
 
     public CommissionsGUI() {
         cards = new JPanel(new CardLayout());
-        cardLayout = (CardLayout)(cards.getLayout());
+        cardLayout = (CardLayout) cards.getLayout();
 
-        SetupView setupView = new SetupView();
-        ConfigView configView = new ConfigView();
-        RunView runView = new RunView();
+        setupView = new SetupView();
+        configView = new ConfigView();
+        runView = new RunView();
 
         cards.add(setupView.getSetupPanel(), "setup");
         cards.add(configView.getConfigPanel(), "config");
@@ -61,5 +65,17 @@ public class CommissionsGUI extends JFrame {
 
     public void close() {
         this.dispatchEvent(new WindowEvent(this, WindowEvent.WINDOW_CLOSING));
+    }
+
+    public SetupView getSetupView() {
+        return setupView;
+    }
+
+    public ConfigView getConfigView() {
+        return configView;
+    }
+
+    public RunView getRunView() {
+        return runView;
     }
 }

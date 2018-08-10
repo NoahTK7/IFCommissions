@@ -32,6 +32,14 @@ public class SetupView {
 
         currentDirectory = new File(".");
 
+        attachListeners();
+    }
+
+    public JPanel getSetupPanel() {
+        return setupPanel;
+    }
+
+    private void attachListeners() {
         browseButton.addActionListener(e -> {
             selectInputFolder();
         });
@@ -40,20 +48,16 @@ public class SetupView {
         });
         runButton.addActionListener(e -> {
             saveData();
-            instance.run();
             IFCommissions.getGui().setRunView();
+            instance.run();
         });
         cancelButton.addActionListener(e -> {
             IFCommissions.getGui().close();
         });
         editConfigButton.addActionListener(e -> {
-            //TODO
             IFCommissions.getGui().setConfigView();
+            //TODO
         });
-    }
-
-    public JPanel getSetupPanel() {
-        return setupPanel;
     }
 
     //adapted from https://stackoverflow.com/questions/32723173/how-to-open-a-file-after-clicking-the-open-button-in-jfilechooser?lq=1
@@ -145,12 +149,16 @@ public class SetupView {
                 temp.add(item.getFile());
             }
         }
+        //TODO: error no files "please select at least one file"
         instance.setActiveFiles(temp);
         //spreadsheet
         instance.setSpreadsheet(outputSpreadsheetCheckBox.isSelected());
         //employee spreadsheet
         instance.setEmployeeSpreadsheet(outputEmployeeSpreadsheetCheckBox.isSelected());
         //directory
+        //TODO: check if exists. if not, make dir. handle errors
         instance.setOutputDirectory(outDirectory);
     }
 }
+//TODO: default output directory
+//TODO: validate info before proceeding with run

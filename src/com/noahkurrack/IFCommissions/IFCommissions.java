@@ -30,6 +30,10 @@ public class IFCommissions {
         IFCommissions instance = new IFCommissions();
         instance.setInstance(instance);
 
+        // config file
+        // check if one exists
+        // if does: load; if not, create default
+
         EventQueue.invokeLater(() -> {
             gui = new CommissionsGUI();
             gui.setVisible(true);
@@ -69,12 +73,19 @@ public class IFCommissions {
                 e.printStackTrace();
             }
             System.out.println(file.getName());
-            contracts.add(new Contract(workbook));
+            Contract contract = new Contract(workbook);
+            contracts.add(contract);
+            gui.getRunView().increaseProgress();
+            gui.getRunView().submit(contract);
         }
     }
 
     private void output() {
         //organization
+
+        // generate file names
+        //gui.getRunView().displayOutputFiles();
+
         if (spreadsheet) {
             //
         }
@@ -109,4 +120,4 @@ public class IFCommissions {
     }
 }
 
-//TODO: parse items costs (config?); 
+//TODO: parse items costs (config?)
