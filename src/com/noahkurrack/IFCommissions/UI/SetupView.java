@@ -51,7 +51,6 @@ public class SetupView {
         runButton.addActionListener(e -> {
             saveData();
             IFCommissions.getGui().setRunView();
-            instance.run();
         });
         cancelButton.addActionListener(e -> {
             IFCommissions.getGui().close();
@@ -70,7 +69,7 @@ public class SetupView {
             try {
                 inPathTextField.setText(direc.getCanonicalPath());
             } catch (IOException e) {
-                //TODO: error
+                //TODO: error (none?)
                 e.printStackTrace();
             }
             currentDirectory = direc;
@@ -86,7 +85,7 @@ public class SetupView {
             try {
                 outPathTextField.setText(direc.getCanonicalPath());
             } catch (IOException e) {
-                //TODO: error
+                //TODO: error (none?)
                 e.printStackTrace();
             }
             outDirectory = direc;
@@ -103,7 +102,7 @@ public class SetupView {
                 }
             }
         } else {
-            //TODO: error no files "please select at least one file"
+            //TODO: display no files in selected directory
         }
 
         filesList.setModel(listModel);
@@ -119,22 +118,33 @@ public class SetupView {
             @Override
             public void mouseClicked(MouseEvent event) {
                 JList list = (JList) event.getSource();
-                int index = list.locationToIndex(event.getPoint());// Get index of item clicked
+                int index = list.locationToIndex(event.getPoint());
                 CheckListItem item = (CheckListItem) list.getModel().getElementAt(index);
-                item.setSelected(!item.isSelected()); // Toggle selected state
-                list.repaint(list.getCellBounds(index, index));// Repaint cell
+                item.setSelected(!item.isSelected());
+                list.repaint(list.getCellBounds(index, index));
                 //logic for select all item at top
                 if (index == 0) {
                     for (int i = 1; i < list.getModel().getSize(); i++) {
                         CheckListItem item1 = (CheckListItem) list.getModel().getElementAt(i);
-                        item1.setSelected(item.isSelected()); // Toggle selected state
-                        list.repaint(list.getCellBounds(i, i));// Repaint cell
+                        item1.setSelected(item.isSelected());
+                        list.repaint(list.getCellBounds(i, i));
                     }
                 } else {
                     if (!item.isSelected()) {
                         CheckListItem item1 = (CheckListItem) list.getModel().getElementAt(0);
                         item1.setSelected(false);
-                        list.repaint(list.getCellBounds(0, 0));// Repaint cell
+                        list.repaint(list.getCellBounds(0, 0));
+                    } else {
+                        boolean allSelected = true;
+                        for (int i = 1; i < list.getModel().getSize(); i++) {
+                            CheckListItem item2 = (CheckListItem) list.getModel().getElementAt(i);
+                            if (!item2.isSelected()) allSelected = false;
+                        }
+                        if (allSelected) {
+                            CheckListItem item1 = (CheckListItem) list.getModel().getElementAt(0);
+                            item1.setSelected(true);
+                            list.repaint(list.getCellBounds(0, 0));
+                        }
                     }
                 }
             }

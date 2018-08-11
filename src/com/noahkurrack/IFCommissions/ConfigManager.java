@@ -14,10 +14,11 @@ public class ConfigManager {
     public ConfigManager() {
         items = new ArrayList<>();
 
-        items.add(new ConfigItem("test", 100));
-        items.add(new ConfigItem("test1", 200));
-        items.add(new ConfigItem("test2", 300));
+        items.add(new ConfigItem("Basic Dog Package", 500));
+        items.add(new ConfigItem("400' Wire Installed", 300));
+        items.add(new ConfigItem("Training (2 Visits)", 200));
 
+        // TODO: config file
         // config file
         // check if one exists
         // if does: load; if not, create default
@@ -28,6 +29,7 @@ public class ConfigManager {
     }
 
     public void save(ArrayList<ConfigItem> items1) {
+        items = items1;
         //write to file
     }
 }

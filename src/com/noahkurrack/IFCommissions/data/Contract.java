@@ -1,5 +1,6 @@
 package com.noahkurrack.IFCommissions.data;
 
+import com.noahkurrack.IFCommissions.IFCommissions;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
@@ -17,15 +18,23 @@ public class Contract {
     private ArrayList<String> parts;
     private double subtotal;
 
+    private double cost;
+
+    //private double profit
+    //private float profitRatio
+    //private float commissionPercent
+
     private double commission;
 
     public Contract(Workbook wb) {
         this.parts = new ArrayList<>();
         this.commission = -1;
+        this.cost = 0;
 
         this.workbook = wb;
         extractData();
 
+        calculateCost();
         calculateCommission();
     }
 
@@ -53,18 +62,35 @@ public class Contract {
         }
         //get parts
         for (int i = 23; i < endRow-2; i++) {
-            this.parts.add(sheet.getRow(i).getCell(0).getStringCellValue());
-            System.out.print(sheet.getRow(i).getCell(0).getStringCellValue() + " ");
+            this.parts.add(sheet.getRow(i).getCell(0).getStringCellValue().trim());
+            //System.out.print(sheet.getRow(i).getCell(0).getStringCellValue() + " ");
         }
 
         //get subtotal
         this.subtotal = sheet.getRow(endRow).getCell(29).getNumericCellValue();
-        System.out.print(subtotal + "\n");
+        System.out.println("subtotal: " + subtotal);
+    }
+
+    private void calculateCost() {
+        ArrayList<ConfigItem> items = IFCommissions.getConfigManager().getItems();
+        for (String s : parts) {
+            boolean found = false;
+            for (ConfigItem item : items) {
+                if (item.getPart().equals(s)) {
+                    cost += item.getCost();
+                    found = true;
+                }
+            }
+            if (!found) {
+                //TODO: error part not found (ignore but send message)
+            }
+        }
+        System.out.println("cost: " + cost);
     }
 
     private void calculateCommission() {
         int finalCommission = 0;
-        // TODO
+        // TODO: commission algorithm
         // algorithm
             //calculate cost
             //calculate markup percentage

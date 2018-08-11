@@ -18,6 +18,7 @@ public class IFCommissions {
     private static ConfigManager configManager;
 
     private File outputDirectory;
+    private ArrayList<String> outputFiles;
 
     private ArrayList<File> activeFiles;
     private boolean spreadsheet;
@@ -46,6 +47,7 @@ public class IFCommissions {
         contracts = new ArrayList<>();
 
         outputDirectory = new File(".");
+        outputFiles = new ArrayList<>();
         activeFiles = new ArrayList<>();
         spreadsheet = true;
         employeeSpreadsheet = false;
@@ -68,6 +70,16 @@ public class IFCommissions {
     }
 
     public void run() {
+        // TODO: generate file names
+        if (spreadsheet) {
+            outputFiles.add("spread");
+        }
+        if (employeeSpreadsheet) {
+            outputFiles.add("empSpread");
+        }
+
+        gui.getRunView().setStats(outputFiles, activeFiles.size());
+
         //create contract object for each file in directory
         for (File file: activeFiles) {
             Workbook workbook = null;
@@ -79,16 +91,12 @@ public class IFCommissions {
             System.out.println(file.getName());
             Contract contract = new Contract(workbook);
             contracts.add(contract);
-            gui.getRunView().increaseProgress();
             gui.getRunView().submit(contract);
         }
     }
 
     private void output() {
-        //organization
-
-        // generate file names
-        //gui.getRunView().displayOutputFiles();
+        //TODO: output
 
         if (spreadsheet) {
             //
@@ -123,5 +131,4 @@ public class IFCommissions {
         this.employeeSpreadsheet = employeeSpreadsheet;
     }
 }
-
-//TODO: parse items costs (configManager?)
+//TODO: wire cost in description
