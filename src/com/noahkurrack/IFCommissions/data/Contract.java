@@ -20,9 +20,9 @@ public class Contract {
 
     private double cost;
 
-    //private double profit
-    //private float profitRatio
-    //private float commissionPercent
+    private double profit;
+    private double profitRatio;
+    private double commissionPercent;
 
     private double commission;
 
@@ -118,6 +118,14 @@ public class Contract {
 
     public double getSubtotal() {
         return subtotal;
+    }
+
+    public double getProfit() {
+        return profit;
+    }
+
+    public double getProfitRatio() {
+        return profitRatio;
     }
 
     public double getCommission() {

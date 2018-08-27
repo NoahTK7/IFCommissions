@@ -14,8 +14,8 @@ public class CommissionsGUI extends JFrame {
     private ConfigView configView;
     private RunView runView;
 
-    private int width = 650;
-    private int height = 400;
+    private final int width = 650;
+    private final int height = 400;
 
     public CommissionsGUI() {
         cards = new JPanel(new CardLayout());

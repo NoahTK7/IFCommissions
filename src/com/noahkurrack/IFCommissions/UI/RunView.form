@@ -45,7 +45,7 @@
         <properties/>
         <border type="none"/>
         <children>
-          <component id="b70df" class="javax.swing.JTable" binding="table1" default-binding="true">
+          <component id="b70df" class="javax.swing.JTable" binding="contractTable" custom-create="true">
             <constraints/>
             <properties/>
           </component>

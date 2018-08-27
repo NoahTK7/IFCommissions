@@ -5,6 +5,7 @@ import com.noahkurrack.IFCommissions.UI.util.CheckListItem;
 import com.noahkurrack.IFCommissions.UI.util.CheckListRenderer;
 
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.File;
@@ -23,6 +24,7 @@ public class SetupView {
     private JButton editConfigButton;
     private JTextField outPathTextField;
     private JButton browseOutButton;
+    private JLabel errorLabel;
 
     private File currentDirectory;
     private File outDirectory;
@@ -49,8 +51,9 @@ public class SetupView {
             selectOutputFolder();
         });
         runButton.addActionListener(e -> {
-            saveData();
-            IFCommissions.getGui().setRunView();
+            if (saveData()) {
+                IFCommissions.getGui().setRunView();
+            }
         });
         cancelButton.addActionListener(e -> {
             IFCommissions.getGui().close();
@@ -65,14 +68,14 @@ public class SetupView {
         JFileChooser chooser = new JFileChooser(new File("."));
         chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
         if (chooser.showOpenDialog(setupPanel.getParent()) == JFileChooser.APPROVE_OPTION) {
-            File direc = chooser.getSelectedFile();
+            File directory = chooser.getSelectedFile();
             try {
-                inPathTextField.setText(direc.getCanonicalPath());
+                inPathTextField.setText(directory.getCanonicalPath());
             } catch (IOException e) {
-                //TODO: error (none?)
+                //error (ignore?)
                 e.printStackTrace();
             }
-            currentDirectory = direc;
+            currentDirectory = directory;
             populateFileList();
         }
     }
@@ -81,14 +84,14 @@ public class SetupView {
         JFileChooser chooser = new JFileChooser(new File("."));
         chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
         if (chooser.showOpenDialog(setupPanel.getParent()) == JFileChooser.APPROVE_OPTION) {
-            File direc = chooser.getSelectedFile();
+            File directory = chooser.getSelectedFile();
             try {
-                outPathTextField.setText(direc.getCanonicalPath());
+                outPathTextField.setText(directory.getCanonicalPath());
             } catch (IOException e) {
-                //TODO: error (none?)
+                //error (ignore?)
                 e.printStackTrace();
             }
-            outDirectory = direc;
+            outDirectory = directory;
         }
     }
 
@@ -102,7 +105,7 @@ public class SetupView {
                 }
             }
         } else {
-            //TODO: display no files in selected directory
+            //ignore
         }
 
         filesList.setModel(listModel);
@@ -122,7 +125,7 @@ public class SetupView {
                 CheckListItem item = (CheckListItem) list.getModel().getElementAt(index);
                 item.setSelected(!item.isSelected());
                 list.repaint(list.getCellBounds(index, index));
-                //logic for select all item at top
+                //logic for select all item at top (algorithmic thinking)
                 if (index == 0) {
                     for (int i = 1; i < list.getModel().getSize(); i++) {
                         CheckListItem item1 = (CheckListItem) list.getModel().getElementAt(i);
@@ -149,9 +152,19 @@ public class SetupView {
                 }
             }
         });
+
+        inPathTextField = new JTextField();
+        inPathTextField.setEditable(false);
+
+        outPathTextField = new JTextField();
+        outPathTextField.setEditable(false);
+
+        errorLabel = new JLabel();
+        errorLabel.setFont(new Font(errorLabel.getFont().getFontName(), errorLabel.getFont().getStyle(), 11));
+        errorLabel.setForeground(Color.RED);
     }
 
-    private void saveData() {
+    private boolean saveData() {
         //active files
         ArrayList<File> temp = new ArrayList<>();
         for (int i = 1; i < filesList.getModel().getSize(); i++) {
@@ -160,16 +173,27 @@ public class SetupView {
                 temp.add(item.getFile());
             }
         }
-        //TODO: error no files "please select at least one file"
-        instance.setActiveFiles(temp);
-        //spreadsheet
-        instance.setSpreadsheet(outputSpreadsheetCheckBox.isSelected());
-        //employee spreadsheet
-        instance.setEmployeeSpreadsheet(outputEmployeeSpreadsheetCheckBox.isSelected());
-        //directory
-        //TODO: check if exists. if not, make dir. handle errors
-        instance.setOutputDirectory(outDirectory);
+        //validation
+        boolean valid = true;
+        if (temp.size() < 1) {
+            valid = false;
+            errorLabel.setText("Please select at least one invoice.");
+        }
+
+        boolean spreadsheet = outputSpreadsheetCheckBox.isSelected();
+        boolean employeeSpreadsheet = outputEmployeeSpreadsheetCheckBox.isSelected();
+        if (outDirectory == null && (spreadsheet || employeeSpreadsheet)) {
+            valid = false;
+            errorLabel.setText("Please select an output location.");
+        }
+
+        if (valid) {
+            instance.setSpreadsheet(spreadsheet);
+            instance.setEmployeeSpreadsheet(employeeSpreadsheet);
+            instance.setActiveFiles(temp);
+            instance.setOutputDirectory(outDirectory);
+        }
+
+        return valid;
     }
 }
-//TODO: default output directory
-//TODO: validate info before proceeding with run

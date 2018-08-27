@@ -70,7 +70,7 @@ public class IFCommissions {
     }
 
     public void run() {
-        // TODO: generate file names
+        // TODO: generate file names (name with timestamp)
         if (spreadsheet) {
             outputFiles.add("spread");
         }
@@ -106,13 +106,19 @@ public class IFCommissions {
         }
         //output
         //create workbook, sheet
+
+        if (!this.outputDirectory.isDirectory()) {
+            this.outputDirectory.mkdir();
+        }
+
         for (Contract contract: contracts) {
             //create row for each contract, add to sheet
             System.out.println(contract.getCustomerInfo() + " " + contract.getOrderNum() + " " + contract.getSalesRep());
         }
+
         //look for directory
         //if none, create directory (from configManager)
-        //write workbook to file (name with timestamp)
+        //write workbook to file
     }
 
     public void setOutputDirectory(File directory) {

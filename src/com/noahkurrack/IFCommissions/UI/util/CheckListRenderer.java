@@ -1,7 +1,5 @@
 package com.noahkurrack.IFCommissions.UI.util;
 
-import com.noahkurrack.IFCommissions.UI.util.CheckListItem;
-
 import javax.swing.*;
 import java.awt.*;
 

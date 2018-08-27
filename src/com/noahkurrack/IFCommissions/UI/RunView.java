@@ -1,6 +1,7 @@
 package com.noahkurrack.IFCommissions.UI;
 
 import com.noahkurrack.IFCommissions.IFCommissions;
+import com.noahkurrack.IFCommissions.UI.util.RunTableModel;
 import com.noahkurrack.IFCommissions.data.Contract;
 
 import javax.swing.*;
@@ -11,12 +12,10 @@ import java.util.ArrayList;
 public class RunView {
     private JPanel runPanel;
     private JProgressBar progressBar1;
-    private JTable table1;
+    private JTable contractTable;
     private JButton finishButton;
     private JLabel progressLabel;
     private JLabel outputFilesLabel;
-
-    private ArrayList<String> fileNames;
 
     private int currentNum;
     private int totalNum;
@@ -43,18 +42,20 @@ public class RunView {
         finishButton.addActionListener(e -> {
             IFCommissions.getGui().close();
         });
+        //contractTable
     }
 
     public void submit(Contract contract) {
         currentNum++;
+        //label
+        progressLabel.setText(currentNum + " of " + totalNum);
+        //progress bar
+        progressBar1.setValue(currentNum);
 
-        paint();
-
-        // TODO: display in table
+        ((RunTableModel) contractTable.getModel()).addContract(contract);
     }
 
     public void setStats(ArrayList<String> fileNames, int contracts) {
-        this.fileNames = fileNames;
         this.totalNum = contracts;
 
         StringBuilder filesText = new StringBuilder();
@@ -75,10 +76,12 @@ public class RunView {
         progressBar1.setMaximum(totalNum);
     }
 
-    private void paint() {
-        //label
-        progressLabel.setText(currentNum + " of " + totalNum);
-        //progress bar
-        progressBar1.setValue(currentNum);
+    private void createUIComponents() {
+        contractTable = new JTable();
+
+        RunTableModel model = new RunTableModel();
+        contractTable.setModel(model);
+
+        contractTable.getColumnModel().getColumn(0).setMinWidth(200);
     }
 }
