@@ -10,6 +10,7 @@ import java.awt.*;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Comparator;
 
 public class IFCommissions {
 
@@ -69,6 +70,29 @@ public class IFCommissions {
         return configManager;
     }
 
+    public void processContracts() {
+        for (File file: activeFiles) {
+            Workbook workbook = null;
+            try {
+                workbook = WorkbookFactory.create(file);
+            } catch (IOException | InvalidFormatException e) {
+                e.printStackTrace();
+            }
+            System.out.println(file.getName());
+            Contract contract = new Contract(workbook);
+            contracts.add(contract);
+        }
+
+        contracts.sort(new Comparator<Contract>() {
+            @Override
+            public int compare(Contract o1, Contract o2) {
+                return o1.getDate().compareTo(o2.getDate());
+            }
+        });
+
+        gui.getOptionsView().populateTable(contracts);
+    }
+
     public void run() {
         // TODO: generate file names (name with timestamp)
         if (spreadsheet) {
@@ -81,17 +105,14 @@ public class IFCommissions {
         gui.getRunView().setStats(outputFiles, activeFiles.size());
 
         //create contract object for each file in directory
-        for (File file: activeFiles) {
-            Workbook workbook = null;
+        for (Contract contract : contracts) {
+            contract.process();
+            gui.getRunView().submit(contract);
             try {
-                workbook = WorkbookFactory.create(file);
-            } catch (IOException | InvalidFormatException e) {
+                Thread.sleep(1000); //lol want to see progress bar
+            } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-            System.out.println(file.getName());
-            Contract contract = new Contract(workbook);
-            contracts.add(contract);
-            gui.getRunView().submit(contract);
         }
     }
 
@@ -137,4 +158,3 @@ public class IFCommissions {
         this.employeeSpreadsheet = employeeSpreadsheet;
     }
 }
-//TODO: wire cost in description

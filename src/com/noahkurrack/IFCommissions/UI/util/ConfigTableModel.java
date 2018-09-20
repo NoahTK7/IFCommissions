@@ -59,15 +59,10 @@ public class ConfigTableModel extends AbstractTableModel {
     }
 
     @Override
-    public void setValueAt(Object aValue, int rowIndex, int columnIndex)
-    {
+    public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
         ConfigItem row = configList.get(rowIndex);
         if(1 == columnIndex) {
             row.setCost((Long) aValue);
         }
-    }
-
-    public ArrayList<ConfigItem> getConfigList() {
-        return configList;
     }
 }

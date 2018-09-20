@@ -52,7 +52,7 @@ public class SetupView {
         });
         runButton.addActionListener(e -> {
             if (saveData()) {
-                IFCommissions.getGui().setRunView();
+                IFCommissions.getGui().setOptionsView();
             }
         });
         cancelButton.addActionListener(e -> {

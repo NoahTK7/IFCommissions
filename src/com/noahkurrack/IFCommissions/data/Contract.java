@@ -5,7 +5,11 @@ import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 
 public class Contract {
 
@@ -14,6 +18,7 @@ public class Contract {
     private String customerInfo;
     private long orderNum;
     private String salesRep;
+    private Date date;
 
     private ArrayList<String> parts;
     private double subtotal;
@@ -21,19 +26,28 @@ public class Contract {
     private double cost;
 
     private double profit;
-    private double profitRatio;
     private double commissionPercent;
 
     private double commission;
+
+    //options
+    private boolean selfGenerated;
+    private static int numSelfGenerated;
 
     public Contract(Workbook wb) {
         this.parts = new ArrayList<>();
         this.commission = -1;
         this.cost = 0;
 
+        //options
+        selfGenerated = false;
+        numSelfGenerated = 0;
+
         this.workbook = wb;
         extractData();
+    }
 
+    public void process() {
         calculateCost();
         calculateCommission();
     }
@@ -46,6 +60,9 @@ public class Contract {
         this.customerInfo = infoRow.getCell(0).getStringCellValue();
         this.orderNum = (long) infoRow.getCell(6).getNumericCellValue();
         this.salesRep = sheet.getRow(18).getCell(28).getStringCellValue();
+
+        this.date = infoRow.getCell(8).getDateCellValue();
+        //TODO: Check proper date
 
         //end row used as reference to end of parts section of contract (varies)
         int endRow = -1;
@@ -66,6 +83,8 @@ public class Contract {
             //System.out.print(sheet.getRow(i).getCell(0).getStringCellValue() + " ");
         }
 
+        //TODO: wire cost in description
+
         //get subtotal
         this.subtotal = sheet.getRow(endRow).getCell(29).getNumericCellValue();
         System.out.println("subtotal: " + subtotal);
@@ -85,18 +104,37 @@ public class Contract {
                 //TODO: error part not found (ignore but send message)
             }
         }
-        System.out.println("cost: " + cost);
     }
 
     private void calculateCommission() {
-        int finalCommission = 0;
-        // TODO: commission algorithm
-        // algorithm
-            //calculate cost
-            //calculate markup percentage
-            //determine commission percentage
-            //calculate commission
-        this.commission = finalCommission;
+        this.profit = this.subtotal - this.cost;
+        int profitPercentage = (int) Math.round(this.profit / this.cost * 100);
+
+        if (profitPercentage <= 68) {
+            commissionPercent = 10;
+        } else if (profitPercentage <= 79) {
+            commissionPercent = 11;
+        } else if (profitPercentage <= 94) {
+            commissionPercent = 12;
+        } else if (profitPercentage <= 114) {
+            commissionPercent = 13;
+        } else if (profitPercentage <= 139) {
+            commissionPercent = 14;
+        } else {
+            commissionPercent = 15;
+        }
+
+        //options
+        if (this.selfGenerated) {
+            numSelfGenerated++;
+            if (numSelfGenerated>3) {
+                commissionPercent += 5;
+            } else {
+                commissionPercent += 7;
+            }
+        }
+
+        this.commission = this.profit * (this.commissionPercent/100);
     }
 
     //Getters
@@ -124,11 +162,23 @@ public class Contract {
         return profit;
     }
 
-    public double getProfitRatio() {
-        return profitRatio;
+    public double getCommissionPercent() {
+        return commissionPercent;
     }
 
     public double getCommission() {
         return commission;
+    }
+
+    public Date getDate() {
+        return date;
+    }
+
+    public boolean isSelfGenerated() {
+        return selfGenerated;
+    }
+
+    public void setSelfGenerated(boolean selfGenerated) {
+        this.selfGenerated = selfGenerated;
     }
 }

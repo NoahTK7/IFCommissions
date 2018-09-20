@@ -5,22 +5,18 @@ import com.noahkurrack.IFCommissions.data.Contract;
 import javax.swing.table.AbstractTableModel;
 import java.util.ArrayList;
 
-public class RunTableModel extends AbstractTableModel {
+public class OptionsTableModel extends AbstractTableModel {
 
     private final ArrayList<Contract> contractList;
 
     private final String[] columnNames = new String[] {
-            "Customer Info", "Sales Rep", "Subtotal", "Profit", "Commission %", "Commission"
+            "Customer Info", "Subtotal", "Self Generated"
     };
     private final Class[] columnClass = new Class[] {
-            String.class, String.class, Double.class, Double.class, Double.class, Double.class
+            String.class, Double.class, Boolean.class
     };
 
-    public RunTableModel(ArrayList<Contract> contracts) {
-        this.contractList = contracts;
-    }
-
-    public RunTableModel() {
+    public OptionsTableModel() {
         this.contractList = new ArrayList<>();
     }
 
@@ -51,15 +47,9 @@ public class RunTableModel extends AbstractTableModel {
             case 0:
                 return row.getCustomerInfo();
             case 1:
-                return row.getSalesRep();
-            case 2:
                 return row.getSubtotal();
-            case 3:
-                return row.getProfit();
-            case 4:
-                return row.getCommissionPercent();
-            case 5:
-                return row.getCommission();
+            case 2:
+                return row.isSelfGenerated();
             default: return null;
 
         }
@@ -67,15 +57,19 @@ public class RunTableModel extends AbstractTableModel {
 
     @Override
     public boolean isCellEditable(int rowIndex, int columnIndex) {
-        return false;
-    }
-
-    public ArrayList<Contract> getContractList() {
-        return contractList;
+        return columnIndex==2;
     }
 
     public void addContract(Contract contract) {
         contractList.add(contract);
         this.fireTableDataChanged();
+    }
+
+    @Override
+    public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
+        Contract row = contractList.get(rowIndex);
+        if(2 == columnIndex) {
+            row.setSelfGenerated((Boolean) aValue);
+        }
     }
 }

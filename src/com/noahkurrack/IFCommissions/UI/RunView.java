@@ -82,6 +82,8 @@ public class RunView {
         RunTableModel model = new RunTableModel();
         contractTable.setModel(model);
 
-        contractTable.getColumnModel().getColumn(0).setMinWidth(200);
+        contractTable.getColumnModel().getColumn(0).setMinWidth(100);
+        contractTable.getColumnModel().getColumn(1).setMinWidth(100);
+        contractTable.getColumnModel().getColumn(4).setMinWidth(100);
     }
 }
