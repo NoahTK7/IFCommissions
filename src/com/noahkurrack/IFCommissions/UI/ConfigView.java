@@ -43,7 +43,7 @@ public class ConfigView {
     private void saveConfig() {
         ArrayList<ConfigItem> items = new ArrayList<>();
         for (int i = 0; i < configTable.getModel().getRowCount(); i++) {
-            items.add(new ConfigItem((String) configTable.getModel().getValueAt(i, 0), (Long) configTable.getModel().getValueAt(i, 1)));
+            items.add(new ConfigItem((String) configTable.getModel().getValueAt(i, 0), (Double) configTable.getModel().getValueAt(i, 1)));
         }
         IFCommissions.getConfigManager().save(items);
         IFCommissions.getGui().setSetupView();

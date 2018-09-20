@@ -47,12 +47,15 @@ public class RunView {
 
     public void submit(Contract contract) {
         currentNum++;
+
         //label
         progressLabel.setText(currentNum + " of " + totalNum);
         //progress bar
         progressBar1.setValue(currentNum);
 
         ((RunTableModel) contractTable.getModel()).addContract(contract);
+
+        progressBar1.update(progressBar1.getGraphics());
     }
 
     public void setStats(ArrayList<String> fileNames, int contracts) {

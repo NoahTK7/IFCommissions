@@ -14,7 +14,7 @@ public class ConfigTableModel extends AbstractTableModel {
             "Part", "Cost"
     };
     private final Class[] columnClass = new Class[] {
-            String.class, Long.class
+            String.class, Double.class
     };
 
     public ConfigTableModel(ArrayList<ConfigItem> configList) {
@@ -62,7 +62,7 @@ public class ConfigTableModel extends AbstractTableModel {
     public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
         ConfigItem row = configList.get(rowIndex);
         if(1 == columnIndex) {
-            row.setCost((Long) aValue);
+            row.setCost((Double) aValue);
         }
     }
 }

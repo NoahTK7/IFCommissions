@@ -13,7 +13,7 @@ public class OptionsView {
     private JPanel optionsPanel;
     private JTable contractTable;
     private JButton continueButton;
-    private JButton cancelButton;
+    private JButton backButton;
 
     public OptionsView() {
         attachListeners();
@@ -30,8 +30,8 @@ public class OptionsView {
         continueButton.addActionListener(e -> {
             IFCommissions.getGui().setRunView();
         });
-        cancelButton.addActionListener(e -> {
-            IFCommissions.getGui().close();
+        backButton.addActionListener(e -> {
+            IFCommissions.getGui().setSetupView();
         });
     }
 
@@ -40,6 +40,7 @@ public class OptionsView {
     }
 
     public void populateTable(ArrayList<Contract> contracts) {
+        ((OptionsTableModel) contractTable.getModel()).reset();
         for (Contract contract : contracts)
         ((OptionsTableModel) contractTable.getModel()).addContract(contract);
     }

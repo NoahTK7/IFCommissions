@@ -79,15 +79,17 @@ public class Contract {
         }
         //get parts
         for (int i = 23; i < endRow-2; i++) {
-            this.parts.add(sheet.getRow(i).getCell(0).getStringCellValue().trim());
-            //System.out.print(sheet.getRow(i).getCell(0).getStringCellValue() + " ");
+            String part = sheet.getRow(i).getCell(0).getStringCellValue().trim();
+            // wire from description
+            if (part.contains("Wire Installed")) {
+                String description = sheet.getRow(i).getCell(5).getStringCellValue().trim();
+                part = "Wire-"+description.split("\'")[0];
+            }
+            this.parts.add(part);
         }
-
-        //TODO: wire cost in description
 
         //get subtotal
         this.subtotal = sheet.getRow(endRow).getCell(29).getNumericCellValue();
-        System.out.println("subtotal: " + subtotal);
     }
 
     private void calculateCost() {
@@ -98,12 +100,19 @@ public class Contract {
                 if (item.getPart().equals(s)) {
                     cost += item.getCost();
                     found = true;
+                } else if (item.getPart().equals("Wire per foot") && s.contains("Wire-")) {
+                    //System.out.println(s);
+                    int feet =Integer.valueOf(s.substring(5));
+                    cost += feet * item.getCost();
+                    found = true;
                 }
             }
             if (!found) {
                 //TODO: error part not found (ignore but send message)
+                System.out.println("error: part not found: " + s + ". add to config file or part will be ignored.");
             }
         }
+        System.out.println("cost: "+cost);
     }
 
     private void calculateCommission() {
@@ -148,10 +157,6 @@ public class Contract {
 
     public String getSalesRep() {
         return salesRep;
-    }
-
-    public ArrayList<String> getParts() {
-        return parts;
     }
 
     public double getSubtotal() {

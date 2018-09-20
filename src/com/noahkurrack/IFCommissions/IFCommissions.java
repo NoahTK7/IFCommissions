@@ -71,6 +71,11 @@ public class IFCommissions {
     }
 
     public void processContracts() {
+        //already populated, user pressed back button
+        if (contracts.size()>0) {
+            contracts.clear();
+        }
+
         for (File file: activeFiles) {
             Workbook workbook = null;
             try {
@@ -78,7 +83,7 @@ public class IFCommissions {
             } catch (IOException | InvalidFormatException e) {
                 e.printStackTrace();
             }
-            System.out.println(file.getName());
+            //System.out.println(file.getName());
             Contract contract = new Contract(workbook);
             contracts.add(contract);
         }

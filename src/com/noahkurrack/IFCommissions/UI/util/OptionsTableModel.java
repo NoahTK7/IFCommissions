@@ -60,6 +60,11 @@ public class OptionsTableModel extends AbstractTableModel {
         return columnIndex==2;
     }
 
+    public void reset() {
+        contractList.clear();
+        this.fireTableDataChanged();
+    }
+
     public void addContract(Contract contract) {
         contractList.add(contract);
         this.fireTableDataChanged();

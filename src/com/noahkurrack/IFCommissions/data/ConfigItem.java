@@ -3,9 +3,9 @@ package com.noahkurrack.IFCommissions.data;
 public class ConfigItem {
 
     private String part;
-    private long cost;
+    private double cost;
 
-    public ConfigItem(String part, long cost) {
+    public ConfigItem(String part, double cost) {
         this.part = part;
         this.cost = cost;
     }
@@ -14,7 +14,7 @@ public class ConfigItem {
         return part;
     }
 
-    public long getCost() {
+    public double getCost() {
         return cost;
     }
 
@@ -22,7 +22,7 @@ public class ConfigItem {
         this.part = part;
     }
 
-    public void setCost(long cost) {
+    public void setCost(double cost) {
         this.cost = cost;
     }
 }

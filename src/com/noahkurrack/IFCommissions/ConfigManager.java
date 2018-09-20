@@ -14,8 +14,10 @@ public class ConfigManager {
     public ConfigManager() {
         items = new ArrayList<>();
 
+        //temp
+        items.add(new ConfigItem("Wire per foot", 1));
+
         items.add(new ConfigItem("Basic Dog Package", 500));
-        items.add(new ConfigItem("400' Wire Installed", 300));
         items.add(new ConfigItem("Training (2 Visits)", 200));
 
         // TODO: config file
