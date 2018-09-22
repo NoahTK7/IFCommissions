@@ -5,6 +5,7 @@ import com.noahkurrack.IFCommissions.data.Contract;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.usermodel.WorkbookFactory;
+import org.json.simple.parser.ParseException;
 
 import java.awt.*;
 import java.io.File;
@@ -34,7 +35,12 @@ public class IFCommissions {
         IFCommissions instance = new IFCommissions();
         instance.setInstance(instance);
 
-        configManager = new ConfigManager();
+        try {
+            configManager = new ConfigManager();
+        } catch (IOException e) {
+            System.out.println("Configuration error. Cannot proceed.");
+            e.printStackTrace();
+        }
 
         EventQueue.invokeLater(() -> {
             gui = new CommissionsGUI();
@@ -163,3 +169,4 @@ public class IFCommissions {
         this.employeeSpreadsheet = employeeSpreadsheet;
     }
 }
+//TODO: Documentation in readme

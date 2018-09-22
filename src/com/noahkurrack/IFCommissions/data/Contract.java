@@ -97,10 +97,10 @@ public class Contract {
         for (String s : parts) {
             boolean found = false;
             for (ConfigItem item : items) {
-                if (item.getPart().equals(s)) {
+                if (item.getPart().equalsIgnoreCase(s)) {
                     cost += item.getCost();
                     found = true;
-                } else if (item.getPart().equals("Wire per foot") && s.contains("Wire-")) {
+                } else if (item.getPart().equalsIgnoreCase("Wire per foot") && s.contains("Wire-")) {
                     //System.out.println(s);
                     int feet =Integer.valueOf(s.substring(5));
                     cost += feet * item.getCost();

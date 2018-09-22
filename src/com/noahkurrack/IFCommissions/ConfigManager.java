@@ -1,29 +1,57 @@
 package com.noahkurrack.IFCommissions;
 
 import com.noahkurrack.IFCommissions.data.ConfigItem;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 
-import java.io.File;
+import java.io.*;
+import java.nio.file.Files;
 import java.util.ArrayList;
 
 public class ConfigManager {
 
     private File configFile;
+    private File defaultConfig;
 
     private ArrayList<ConfigItem> items;
 
-    public ConfigManager() {
+    public ConfigManager() throws IOException {
         items = new ArrayList<>();
 
-        //temp
-        items.add(new ConfigItem("Wire per foot", 1));
+        ClassLoader classLoader = this.getClass().getClassLoader();
+        this.defaultConfig = new File(classLoader.getResource("com/noahkurrack/IFCommissions/assets/config-defaults.json").getFile());
+        this.configFile = new File(classLoader.getResource("com/noahkurrack/IFCommissions/assets/config.json").getFile());
 
-        items.add(new ConfigItem("Basic Dog Package", 500));
-        items.add(new ConfigItem("Training (2 Visits)", 200));
+        if (new BufferedReader(new FileReader(configFile)).readLine()==null) {
+            configFile.delete();
+            Files.copy(defaultConfig.toPath(), configFile.toPath());
+        }
 
-        // TODO: config file
-        // config file
-        // check if one exists
-        // if does: load; if not, create default
+        updateConfig();
+    }
+
+    private void updateConfig() {
+        items.clear();
+
+        JSONParser jsonParser = new JSONParser();
+        JSONObject configData;
+        JSONArray configs;
+        try {
+            configData = (JSONObject) jsonParser.parse(new FileReader(configFile));
+            configs = (JSONArray) configData.get("configs");
+        } catch (IOException | ParseException e) {
+            configs = new JSONArray();
+            e.printStackTrace();
+        }
+
+        for (Object obj : configs) {
+            String name = ((JSONObject) obj).get("item").toString();
+            double cost = Double.valueOf(((JSONObject) obj).get("cost").toString());
+
+            items.add(new ConfigItem(name, cost));
+        }
     }
 
     public ArrayList<ConfigItem> getItems() {
@@ -32,6 +60,35 @@ public class ConfigManager {
 
     public void save(ArrayList<ConfigItem> items1) {
         items = items1;
-        //write to file
+
+        JSONObject out = new JSONObject();
+        JSONArray configsArray = new JSONArray();
+        for (ConfigItem item : items1) {
+            JSONObject itemObj = new JSONObject();
+            itemObj.put("item", item.getPart());
+            itemObj.put("cost", item.getCost());
+            configsArray.add(itemObj);
+        }
+        out.put("configs", configsArray);
+
+        BufferedWriter writer = null;
+        try {
+            writer = new BufferedWriter(new FileWriter(configFile, false));
+            writer.write(out.toJSONString());
+            writer.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void restoreDefaults() {
+        configFile.delete();
+        try {
+            Files.copy(defaultConfig.toPath(), configFile.toPath());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        updateConfig();
     }
 }

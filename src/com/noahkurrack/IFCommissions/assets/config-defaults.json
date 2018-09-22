@@ -1,0 +1,16 @@
+{
+  "configs": [
+    {
+      "item": "Wire per foot",
+      "cost": 0.7
+    },
+    {
+      "item": "Basic Dog Package",
+      "cost": 500
+    },
+    {
+      "item": "Training (2 Visits)",
+      "cost": 200
+    }
+  ]
+}

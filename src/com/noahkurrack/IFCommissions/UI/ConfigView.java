@@ -12,6 +12,9 @@ public class ConfigView {
     private JTable configTable;
     private JButton saveButton;
     private JButton cancelButton;
+    private JButton addButton;
+    private JButton removeButton;
+    private JButton restoreDefaultsButton;
 
     public ConfigView() {
         attachListeners();
@@ -24,6 +27,15 @@ public class ConfigView {
         cancelButton.addActionListener(e -> {
             cancelConfig();
         });
+        addButton.addActionListener(e -> {
+            addRow();
+        });
+        removeButton.addActionListener(e -> {
+            removeRow();
+        });
+        restoreDefaultsButton.addActionListener(e -> {
+            restoreDefaults();
+        });
     }
 
     public JPanel getConfigPanel() {
@@ -34,7 +46,6 @@ public class ConfigView {
         configTable = new JTable();
 
         ConfigTableModel model = new ConfigTableModel(IFCommissions.getConfigManager().getItems());
-
         configTable.setModel(model);
 
         configTable.getColumnModel().getColumn(1).setMaxWidth(100);
@@ -55,5 +66,29 @@ public class ConfigView {
         configTable.setModel(model);
 
         IFCommissions.getGui().setSetupView();
+    }
+
+    private void addRow() {
+        //Dialog
+        String part = (String)JOptionPane.showInputDialog(
+                configPanel.getParent(),
+                "Part name (exactly as appears in invoice):",
+                "New Part",
+                JOptionPane.PLAIN_MESSAGE,
+                null,
+                null,
+                null);
+        ((ConfigTableModel) configTable.getModel()).addRow(part);
+    }
+
+    private void removeRow() {
+        ((ConfigTableModel) configTable.getModel()).removeRow(configTable.getSelectedRow());
+    }
+
+    private void restoreDefaults() {
+        IFCommissions.getConfigManager().restoreDefaults();
+
+        ConfigTableModel model = new ConfigTableModel(IFCommissions.getConfigManager().getItems());
+        configTable.setModel(model);
     }
 }

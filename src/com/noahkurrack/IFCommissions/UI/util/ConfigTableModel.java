@@ -65,4 +65,14 @@ public class ConfigTableModel extends AbstractTableModel {
             row.setCost((Double) aValue);
         }
     }
+
+    public void addRow(String part) {
+        configList.add(new ConfigItem(part, 0));
+        this.fireTableDataChanged();
+    }
+
+    public void removeRow(int index) {
+        configList.remove(index);
+        this.fireTableDataChanged();
+    }
 }
