@@ -5,7 +5,6 @@ import com.noahkurrack.IFCommissions.data.Contract;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.usermodel.WorkbookFactory;
-import org.json.simple.parser.ParseException;
 
 import java.awt.*;
 import java.io.File;
@@ -120,11 +119,12 @@ public class IFCommissions {
             contract.process();
             gui.getRunView().submit(contract);
             try {
-                Thread.sleep(1000); //lol want to see progress bar
+                Thread.sleep(100); //lol want to see progress bar
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
         }
+        Contract.displayPartsNotFound();
     }
 
     private void output() {
@@ -170,3 +170,4 @@ public class IFCommissions {
     }
 }
 //TODO: Documentation in readme
+//TODO: add percentage points instead of self-generated

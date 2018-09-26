@@ -5,6 +5,7 @@ import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 
+import javax.swing.*;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -30,6 +31,8 @@ public class Contract {
 
     private double commission;
 
+    private static ArrayList<String> notFound;
+
     //options
     private boolean selfGenerated;
     private static int numSelfGenerated;
@@ -38,6 +41,8 @@ public class Contract {
         this.parts = new ArrayList<>();
         this.commission = -1;
         this.cost = 0;
+
+        notFound = new ArrayList<>();
 
         //options
         selfGenerated = false;
@@ -108,8 +113,10 @@ public class Contract {
                 }
             }
             if (!found) {
-                //TODO: error part not found (ignore but send message)
                 System.out.println("error: part not found: " + s + ". add to config file or part will be ignored.");
+                if (!notFound.contains(s)) {
+                    notFound.add(s);
+                }
             }
         }
         System.out.println("cost: "+cost);
@@ -144,6 +151,22 @@ public class Contract {
         }
 
         this.commission = this.profit * (this.commissionPercent/100);
+    }
+
+    public static void displayPartsNotFound() {
+        if (notFound.size()==0) return;
+
+        StringBuilder out = new StringBuilder();
+        for (String aNotFound : notFound) {
+            out.append(aNotFound).append("\n");
+        }
+
+        JOptionPane.showMessageDialog(
+                IFCommissions.getGui(),
+                "The following parts not found in configuration, so no cost will be associated: \n\n"+out+"\nEdit the configuration if one of these parts should have a cost.\nOtherwise, parts will be ignored.",
+                "Parts Not Found",
+                JOptionPane.INFORMATION_MESSAGE
+        );
     }
 
     //Getters

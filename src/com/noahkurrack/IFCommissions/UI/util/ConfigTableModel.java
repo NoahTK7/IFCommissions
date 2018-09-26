@@ -8,7 +8,7 @@ import java.util.ArrayList;
 // adapted from http://www.codejava.net/java-se/swing/editable-jtable-example
 public class ConfigTableModel extends AbstractTableModel {
 
-    private final ArrayList<ConfigItem> configList;
+    private ArrayList<ConfigItem> configList;
 
     private final String[] columnNames = new String[] {
             "Part", "Cost"
@@ -73,6 +73,15 @@ public class ConfigTableModel extends AbstractTableModel {
 
     public void removeRow(int index) {
         configList.remove(index);
+        this.fireTableDataChanged();
+    }
+
+    public ArrayList<ConfigItem> getConfigList() {
+        return configList;
+    }
+
+    public void setConfigList(ArrayList<ConfigItem> configList) {
+        this.configList = configList;
         this.fireTableDataChanged();
     }
 }

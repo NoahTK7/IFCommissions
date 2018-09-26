@@ -10,6 +10,11 @@ public class ConfigItem {
         this.cost = cost;
     }
 
+    public ConfigItem(ConfigItem item) {
+        this.part = item.getPart();
+        this.cost = item.getCost();
+    }
+
     public String getPart() {
         return part;
     }

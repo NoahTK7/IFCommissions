@@ -5,6 +5,8 @@ import com.noahkurrack.IFCommissions.UI.util.ConfigTableModel;
 import com.noahkurrack.IFCommissions.data.ConfigItem;
 
 import javax.swing.*;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
 import java.util.ArrayList;
 
 public class ConfigView {
@@ -16,7 +18,11 @@ public class ConfigView {
     private JButton removeButton;
     private JButton restoreDefaultsButton;
 
+    private ConfigTableModel configTableModel;
+    private ArrayList<ConfigItem> configSnapshot;
+
     public ConfigView() {
+        configSnapshot = new ArrayList<>();
         attachListeners();
     }
 
@@ -36,6 +42,15 @@ public class ConfigView {
         restoreDefaultsButton.addActionListener(e -> {
             restoreDefaults();
         });
+
+        configPanel.addComponentListener(new ComponentAdapter() {
+            @Override
+            public void componentShown(ComponentEvent e) {
+                super.componentShown(e);
+                //record snapshot of table when panel shown
+                configSnapshot = getDeepCopy(((ConfigTableModel) configTable.getModel()).getConfigList());
+            }
+        });
     }
 
     public JPanel getConfigPanel() {
@@ -45,25 +60,20 @@ public class ConfigView {
     private void createUIComponents() {
         configTable = new JTable();
 
-        ConfigTableModel model = new ConfigTableModel(IFCommissions.getConfigManager().getItems());
-        configTable.setModel(model);
+        configTableModel = new ConfigTableModel(getDeepCopy(IFCommissions.getConfigManager().getItems()));
+        configTable.setModel(configTableModel);
 
         configTable.getColumnModel().getColumn(1).setMaxWidth(100);
     }
 
     private void saveConfig() {
-        ArrayList<ConfigItem> items = new ArrayList<>();
-        for (int i = 0; i < configTable.getModel().getRowCount(); i++) {
-            items.add(new ConfigItem((String) configTable.getModel().getValueAt(i, 0), (Double) configTable.getModel().getValueAt(i, 1)));
-        }
-        IFCommissions.getConfigManager().save(items);
+        IFCommissions.getConfigManager().save(configTableModel.getConfigList());
         IFCommissions.getGui().setSetupView();
     }
 
     private void cancelConfig() {
-        //reset table model
-        ConfigTableModel model = new ConfigTableModel(IFCommissions.getConfigManager().getItems());
-        configTable.setModel(model);
+        //reset table model to snapshot
+        configTableModel.setConfigList(configSnapshot);
 
         IFCommissions.getGui().setSetupView();
     }
@@ -87,8 +97,15 @@ public class ConfigView {
 
     private void restoreDefaults() {
         IFCommissions.getConfigManager().restoreDefaults();
+        configTableModel.setConfigList(getDeepCopy(IFCommissions.getConfigManager().getItems()));
+    }
 
-        ConfigTableModel model = new ConfigTableModel(IFCommissions.getConfigManager().getItems());
-        configTable.setModel(model);
+    //returns new array in memory with new config item objects
+    private ArrayList<ConfigItem> getDeepCopy(ArrayList<ConfigItem> in) {
+        ArrayList<ConfigItem> configItemsCopy = new ArrayList<>();
+        for (ConfigItem item : in) {
+            configItemsCopy.add(new ConfigItem(item));
+        }
+        return configItemsCopy;
     }
 }
