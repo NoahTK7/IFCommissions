@@ -11,10 +11,10 @@ public class ConfigTableModel extends AbstractTableModel {
     private ArrayList<ConfigItem> configList;
 
     private final String[] columnNames = new String[] {
-            "Part", "Cost"
+            "Part", "Description" ,"Cost"
     };
     private final Class[] columnClass = new Class[] {
-            String.class, Double.class
+            String.class, String.class, Double.class
     };
 
     public ConfigTableModel(ArrayList<ConfigItem> configList) {
@@ -48,6 +48,9 @@ public class ConfigTableModel extends AbstractTableModel {
             return row.getPart();
         }
         else if(1 == columnIndex) {
+            return row.getDescription();
+        }
+        else if(2 == columnIndex) {
             return row.getCost();
         }
         return null;
@@ -55,19 +58,19 @@ public class ConfigTableModel extends AbstractTableModel {
 
     @Override
     public boolean isCellEditable(int rowIndex, int columnIndex) {
-        return columnIndex == 1;
+        return columnIndex == 2;
     }
 
     @Override
     public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
         ConfigItem row = configList.get(rowIndex);
-        if(1 == columnIndex) {
+        if(2 == columnIndex) {
             row.setCost((Double) aValue);
         }
     }
 
-    public void addRow(String part) {
-        configList.add(new ConfigItem(part, 0));
+    public void addRow(String part, String description) {
+        configList.add(new ConfigItem(part, description, 0));
         this.fireTableDataChanged();
     }
 

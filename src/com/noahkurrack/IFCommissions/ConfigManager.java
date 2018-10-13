@@ -48,9 +48,10 @@ public class ConfigManager {
 
         for (Object obj : configs) {
             String name = ((JSONObject) obj).get("item").toString();
+            String description = ((JSONObject) obj).get("description").toString();
             double cost = Double.valueOf(((JSONObject) obj).get("cost").toString());
 
-            items.add(new ConfigItem(name, cost));
+            items.add(new ConfigItem(name, description, cost));
         }
     }
 
@@ -66,6 +67,7 @@ public class ConfigManager {
         for (ConfigItem item : items1) {
             JSONObject itemObj = new JSONObject();
             itemObj.put("item", item.getPart());
+            itemObj.put("description", item.getDescription());
             itemObj.put("cost", item.getCost());
             configsArray.add(itemObj);
         }

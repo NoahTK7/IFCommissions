@@ -60,10 +60,11 @@ public class ConfigView {
     private void createUIComponents() {
         configTable = new JTable();
 
+        //TODO
         configTableModel = new ConfigTableModel(getDeepCopy(IFCommissions.getConfigManager().getItems()));
         configTable.setModel(configTableModel);
 
-        configTable.getColumnModel().getColumn(1).setMaxWidth(100);
+        configTable.getColumnModel().getColumn(2).setMaxWidth(100);
     }
 
     private void saveConfig() {
@@ -88,7 +89,15 @@ public class ConfigView {
                 null,
                 null,
                 null);
-        ((ConfigTableModel) configTable.getModel()).addRow(part);
+        String description = (String)JOptionPane.showInputDialog(
+                configPanel.getParent(),
+                "Part description (exactly as appears in invoice):",
+                "New Part",
+                JOptionPane.PLAIN_MESSAGE,
+                null,
+                null,
+                null);
+        ((ConfigTableModel) configTable.getModel()).addRow(part, description);
     }
 
     private void removeRow() {

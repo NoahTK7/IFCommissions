@@ -21,7 +21,7 @@ public class Contract {
     private String salesRep;
     private Date date;
 
-    private ArrayList<String> parts;
+    private ArrayList<Part> parts;
     private double subtotal;
 
     private double cost;
@@ -31,7 +31,7 @@ public class Contract {
 
     private double commission;
 
-    private static ArrayList<String> notFound;
+    private static ArrayList<Part> notFound;
 
     //options
     private boolean selfGenerated;
@@ -85,12 +85,13 @@ public class Contract {
         //get parts
         for (int i = 23; i < endRow-2; i++) {
             String part = sheet.getRow(i).getCell(0).getStringCellValue().trim();
+            String description = sheet.getRow(i).getCell(5).getStringCellValue().trim();
             // wire from description
             if (part.contains("Wire Installed")) {
-                String description = sheet.getRow(i).getCell(5).getStringCellValue().trim();
+                description = sheet.getRow(i).getCell(5).getStringCellValue().trim();
                 part = "Wire-"+description.split("\'")[0];
             }
-            this.parts.add(part);
+            this.parts.add(new Part(part, description));
         }
 
         //get subtotal
@@ -99,23 +100,27 @@ public class Contract {
 
     private void calculateCost() {
         ArrayList<ConfigItem> items = IFCommissions.getConfigManager().getItems();
-        for (String s : parts) {
+        for (Part part : parts) {
             boolean found = false;
             for (ConfigItem item : items) {
-                if (item.getPart().equalsIgnoreCase(s)) {
+                if (item.getPart().equalsIgnoreCase(part.getId())) {
                     cost += item.getCost();
                     found = true;
-                } else if (item.getPart().equalsIgnoreCase("Wire per foot") && s.contains("Wire-")) {
-                    //System.out.println(s);
-                    int feet =Integer.valueOf(s.substring(5));
+                } else if (item.getPart().equalsIgnoreCase("Wire per foot") && part.getId().contains("Wire-")) {
+                    //System.out.println(part);
+                    int feet = Integer.valueOf(part.getId().substring(5));
                     cost += feet * item.getCost();
                     found = true;
                 }
             }
             if (!found) {
-                System.out.println("error: part not found: " + s + ". add to config file or part will be ignored.");
-                if (!notFound.contains(s)) {
-                    notFound.add(s);
+                System.out.println("error: part not found: " + part.getId() + ". add to config file or part will be ignored.");
+                boolean exists = false;
+                for (Part p: notFound) {
+                    if (p.getId().equals(part.getId())) exists = true;
+                }
+                if (!exists) {
+                    notFound.add(part);
                 }
             }
         }
@@ -157,8 +162,8 @@ public class Contract {
         if (notFound.size()==0) return;
 
         StringBuilder out = new StringBuilder();
-        for (String aNotFound : notFound) {
-            out.append(aNotFound).append("\n");
+        for (Part aNotFound : notFound) {
+            out.append(aNotFound.getDescription()).append(" (").append(aNotFound.getId()).append(")").append("\n");
         }
 
         JOptionPane.showMessageDialog(
@@ -208,5 +213,24 @@ public class Contract {
 
     public void setSelfGenerated(boolean selfGenerated) {
         this.selfGenerated = selfGenerated;
+    }
+
+    class Part{
+
+        private String id;
+        private String description;
+
+        Part(String id, String d) {
+            this.id = id;
+            this.description = d;
+        }
+
+        public String getId() {
+            return id;
+        }
+
+        public String getDescription() {
+            return description;
+        }
     }
 }
