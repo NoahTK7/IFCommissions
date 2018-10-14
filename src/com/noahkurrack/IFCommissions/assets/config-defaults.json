@@ -1,19 +1,149 @@
 {
   "configs": [
     {
-      "item": "Wire per foot",
-      "description": "Wire per foot",
-      "cost": 0.7
+      "item": "Additional Wire New per foot",
+      "description": "Wire Installed New",
+      "cost": 0.1
     },
     {
-      "item": "Basic Dog Package",
-      "description": "Basic Containment Pkg",
-      "cost": 500
+      "item": "WI",
+      "description": "Water installation labor",
+      "cost": 0.6
     },
     {
-      "item": "Training (2 Visits)",
-      "description": "Perfect Start ™ Training",
+      "item": "Custom Hand Work",
+      "description": "Hand Work Install",
+      "cost": 0.3
+    },
+    {
+      "item": "PVC",
+      "description": "PVC",
+      "cost": 0.6
+    },
+    {
+      "item": "Boundary Plus Safety Solution",
+      "description": "Boundary Plus Safety Solution",
+      "cost": 220
+    },
+    {
+      "item": "Digital Safety Solution",
+      "description": "Digital Safety Solution - Containment",
+      "cost": 220
+    },
+    {
+      "item": "Saturday Installation",
+      "description": "Saturday Installation",
+      "cost": 100
+    },
+    {
+      "item": "RIG00-11350",
+      "description": "B+ Single Loop Trans",
+      "cost": 267
+    },
+    {
+      "item": "Boundary Plus Transmitter",
+      "description": "B+ Dual LoopTransmitter",
+      "cost": 300
+    },
+    {
+      "item": "RIG00-11933",
+      "description": "Microlite Receiver",
+      "cost": 199
+    },
+    {
+      "item": "RIG00-13546",
+      "description": "MicroLite + Plus Receiver",
+      "cost": 224
+    },
+    {
+      "item": "RIG00-13144",
+      "description": "ML2 - MicroLite Graphite",
+      "cost": 166
+    },
+    {
+      "item": "RIG00-14107",
+      "description": "Shields Computer Collar",
+      "cost": 95
+    },
+    {
+      "item": "RIF00-15976",
+      "description": "GPS 3.0 Mobile Collar",
+      "cost": 492
+    },
+    {
+      "item": "LifetimeWarrantyUpgradeGPS",
+      "description": "LifetimeWarrantyUpgradeGPS",
       "cost": 200
+    },
+    {
+      "item": "RAC00-15373",
+      "description": "Indoor Shields Plus BC",
+      "cost": 82
+    },
+    {
+      "item": "Outdoor Shield PLUS",
+      "description": "Outdoor Shield PLUS",
+      "cost": 104
+    },
+    {
+      "item": "RAC17-14682",
+      "description": "Shields Gate Transmitter",
+      "cost": 137
+    },
+    {
+      "item": "Outdoor Box",
+      "description": "Outdoor Box",
+      "cost": 45
+    },
+    {
+      "item": "PPA00-10862",
+      "description": "Freedom Aluminum Pet Door-XLarge",
+      "cost": 127
+    },
+    {
+      "item": "PPA00-10861",
+      "description": "Freedom Aluminum Pet Door-Large",
+      "cost": 106
+    },
+    {
+      "item": "PPA00-10860",
+      "description": "Freedom Aluminum Pet Door-Medium",
+      "cost": 93
+    },
+    {
+      "item": "PPA00-10859",
+      "description": "Freedom AlumPet Door-Small",
+      "cost": 79
+    },
+    {
+      "item": "PPA11-10709",
+      "description": "Smart Door Large  INSTALLED",
+      "cost": 155
+    },
+    {
+      "item": "PPA11-10711",
+      "description": "Smart Door Small  INSTALLED",
+      "cost": 115
+    },
+    {
+      "item": "RAC00-13211",
+      "description": "Doorman IF Petdoor-Lg",
+      "cost": 393
+    },
+    {
+      "item": "SD425 Field Trainer",
+      "description": "SportDog 425 Remote Trainer",
+      "cost": 120
+    },
+    {
+      "item": "SBC-10R",
+      "description": "Sportdog Rechargeable Bark Control",
+      "cost": 69
+    },
+    {
+      "item": "PBC00-12726",
+      "description": "Deluxe Little Dog Bark Control",
+      "cost": 58
     }
   ]
 }

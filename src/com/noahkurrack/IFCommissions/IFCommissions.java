@@ -171,3 +171,4 @@ public class IFCommissions {
 }
 //TODO: Documentation in readme
 //TODO: add percentage points instead of self-generated
+//TODO: 4 quantity fields
