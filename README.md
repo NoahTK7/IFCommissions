@@ -1,23 +1,23 @@
-##About
+## About
 
-###Summary
+### Summary
 
 The Invisible Fence Commissions Calculator is 
 //TODO
 
 
-###Interface Structure
+### Interface Structure
 
 - Setup: basic parameters are entered
 - Configuration: manipulation of item costs in contracts
 - Settings:  manual manipulation of calculation parameters
 - Run: displays summary of output
 
-###Instructions
+### Instructions
 
 Simply execute the jar file after installing Java 8. 
 
-###Credit
+### Credit
 
 Copyright (C) 2018 Noah Kurrack. All Rights Reserved.
 
