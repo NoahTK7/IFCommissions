@@ -1,3 +1,9 @@
+/*
+ * Copyright (c) 2018 Noah Kurrack. All rights reserved.
+ * This file is apart of the IFCommissions project.
+ * See README for more licensing information.
+ */
+
 package com.noahkurrack.IFCommissions.UI;
 
 import javax.swing.*;

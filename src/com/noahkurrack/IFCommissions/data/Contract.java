@@ -1,3 +1,9 @@
+/*
+ * Copyright (c) 2018 Noah Kurrack. All rights reserved.
+ * This file is apart of the IFCommissions project.
+ * See README for more licensing information.
+ */
+
 package com.noahkurrack.IFCommissions.data;
 
 import com.noahkurrack.IFCommissions.IFCommissions;
@@ -33,9 +39,7 @@ public class Contract {
 
     private static ArrayList<Part> notFound;
 
-    //options
-    private boolean selfGenerated;
-    private static int numSelfGenerated;
+    private double addPercentage;
 
     public Contract(Workbook wb) {
         this.parts = new ArrayList<>();
@@ -44,9 +48,7 @@ public class Contract {
 
         notFound = new ArrayList<>();
 
-        //options
-        selfGenerated = false;
-        numSelfGenerated = 0;
+        addPercentage = 0;
 
         this.workbook = wb;
         extractData();
@@ -86,10 +88,10 @@ public class Contract {
         for (int i = 23; i < endRow-2; i++) {
             String part = sheet.getRow(i).getCell(0).getStringCellValue().trim();
             String description = sheet.getRow(i).getCell(5).getStringCellValue().trim();
-            // wire from description
-            if (part.contains("Wire Installed")) {
-                description = sheet.getRow(i).getCell(5).getStringCellValue().trim();
-                part = "Wire-"+description.split("\'")[0];
+            double quantity = sheet.getRow(i).getCell(25).getNumericCellValue();
+            //fields with quantities
+            if (quantity>1) {
+                this.parts.add(new Part(part, description, quantity));
             }
             this.parts.add(new Part(part, description));
         }
@@ -104,13 +106,12 @@ public class Contract {
             boolean found = false;
             for (ConfigItem item : items) {
                 if (item.getPart().equalsIgnoreCase(part.getId())) {
-                    cost += item.getCost();
                     found = true;
-                } else if (item.getPart().equalsIgnoreCase("Wire per foot") && part.getId().contains("Wire-")) {
-                    //System.out.println(part);
-                    int feet = Integer.valueOf(part.getId().substring(5));
-                    cost += feet * item.getCost();
-                    found = true;
+                    if (part.getQuantity()>1) {
+                        cost += item.getCost() * part.getQuantity();
+                    } else {
+                        cost += item.getCost();
+                    }
                 }
             }
             if (!found) {
@@ -145,15 +146,7 @@ public class Contract {
             commissionPercent = 15;
         }
 
-        //options
-        if (this.selfGenerated) {
-            numSelfGenerated++;
-            if (numSelfGenerated>3) {
-                commissionPercent += 5;
-            } else {
-                commissionPercent += 7;
-            }
-        }
+        commissionPercent += addPercentage;
 
         this.commission = this.profit * (this.commissionPercent/100);
     }
@@ -207,22 +200,30 @@ public class Contract {
         return date;
     }
 
-    public boolean isSelfGenerated() {
-        return selfGenerated;
+    public double getAddPercentage() {
+        return addPercentage;
     }
 
-    public void setSelfGenerated(boolean selfGenerated) {
-        this.selfGenerated = selfGenerated;
+    public void setAddPercentage(double addPercentage) {
+        this.addPercentage = addPercentage;
     }
 
     class Part{
 
         private String id;
         private String description;
+        private double quantity;
 
         Part(String id, String d) {
             this.id = id;
             this.description = d;
+            this.quantity = 1;
+        }
+
+        Part(String id, String d, double quantity) {
+            this.id = id;
+            this.description = d;
+            this.quantity = quantity;
         }
 
         public String getId() {
@@ -231,6 +232,10 @@ public class Contract {
 
         public String getDescription() {
             return description;
+        }
+
+        public double getQuantity() {
+            return quantity;
         }
     }
 }

@@ -1,3 +1,9 @@
+/*
+ * Copyright (c) 2018 Noah Kurrack. All rights reserved.
+ * This file is apart of the IFCommissions project.
+ * See README for more licensing information.
+ */
+
 package com.noahkurrack.IFCommissions;
 
 import com.noahkurrack.IFCommissions.UI.CommissionsGUI;
@@ -169,6 +175,3 @@ public class IFCommissions {
         this.employeeSpreadsheet = employeeSpreadsheet;
     }
 }
-//TODO: Documentation in readme
-//TODO: add percentage points instead of self-generated
-//TODO: 4 quantity fields

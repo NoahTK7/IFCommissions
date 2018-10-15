@@ -1,21 +1,21 @@
-##IFCommissions
-Summary:
+##About
+###Summary
+The Invisible Fence Commissions Calculator is 
+//TODO
 
-GUI Structure:
-Setup where basic parameters are entered.
-Configuration for manipulating the calculation of contract costs per item.
-Settings for manually checking validity of figures calculated by application.
-Run displays summary of output to spreadsheets in application.
+###Interface Structure
+- Setup: basic parameters are entered
+- Configuration: manipulation of item costs in contracts
+- Settings:  manual manipulation of calculation parameters
+- Run: displays summary of output
 ###Instructions
-Installation
+Simply execute the jar file after installing Java 8. 
+###Credit
 
-###Configuration
+Copyright (C) 2018 Noah Kurrack. All Rights Reserved.
 
-####Outline
-- parse config
-- parse input files
-- create contract objects
-- calculate commissions
-- output file
-
-####Cost Algorithm
+Contents of this project may be distributed or copied for non-commercial use only.
+#### Open Source Libraries
+The following third party libraries that are used in the project are licensed under the Apache License, Version 2.0; software used in compliance with the License. You may obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+- json-simple version 1.1.1 (http://code.google.com/p/json-simple/)
+- Apache POI version 3.17 (https://poi.apache.org/)

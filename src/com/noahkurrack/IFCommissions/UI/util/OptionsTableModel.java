@@ -1,3 +1,9 @@
+/*
+ * Copyright (c) 2018 Noah Kurrack. All rights reserved.
+ * This file is apart of the IFCommissions project.
+ * See README for more licensing information.
+ */
+
 package com.noahkurrack.IFCommissions.UI.util;
 
 import com.noahkurrack.IFCommissions.data.Contract;
@@ -10,10 +16,10 @@ public class OptionsTableModel extends AbstractTableModel {
     private final ArrayList<Contract> contractList;
 
     private final String[] columnNames = new String[] {
-            "Customer Info", "Subtotal", "Self Generated"
+            "Customer Info", "Subtotal", "Add Percentage"
     };
     private final Class[] columnClass = new Class[] {
-            String.class, Double.class, Boolean.class
+            String.class, Double.class, Double.class
     };
 
     public OptionsTableModel() {
@@ -49,7 +55,7 @@ public class OptionsTableModel extends AbstractTableModel {
             case 1:
                 return row.getSubtotal();
             case 2:
-                return row.isSelfGenerated();
+                return row.getAddPercentage();
             default: return null;
 
         }
@@ -74,7 +80,7 @@ public class OptionsTableModel extends AbstractTableModel {
     public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
         Contract row = contractList.get(rowIndex);
         if(2 == columnIndex) {
-            row.setSelfGenerated((Boolean) aValue);
+            row.setAddPercentage((double) aValue);
         }
     }
 }
