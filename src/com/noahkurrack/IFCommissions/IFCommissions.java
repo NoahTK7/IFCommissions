@@ -9,14 +9,15 @@ package com.noahkurrack.IFCommissions;
 import com.noahkurrack.IFCommissions.UI.CommissionsGUI;
 import com.noahkurrack.IFCommissions.data.Contract;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
-import org.apache.poi.ss.usermodel.Workbook;
-import org.apache.poi.ss.usermodel.WorkbookFactory;
+import org.apache.poi.ss.usermodel.*;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import java.awt.*;
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.Iterator;
 
 public class IFCommissions {
 
@@ -112,7 +113,7 @@ public class IFCommissions {
     public void run() {
         // TODO: generate file names (name with timestamp)
         if (spreadsheet) {
-            outputFiles.add("spread");
+            outputFiles.add("detail.xlsx");
         }
         if (employeeSpreadsheet) {
             outputFiles.add("empSpread");
@@ -130,33 +131,81 @@ public class IFCommissions {
                 e.printStackTrace();
             }
         }
+        output();
         Contract.displayPartsNotFound();
     }
 
+    //TODO: Class?
     private void output() {
         //TODO: output
-
-        if (spreadsheet) {
-            //
-        }
-        if (employeeSpreadsheet) {
-            //
-        }
-        //output
-        //create workbook, sheet
 
         if (!this.outputDirectory.isDirectory()) {
             this.outputDirectory.mkdir();
         }
 
-        for (Contract contract: contracts) {
-            //create row for each contract, add to sheet
-            System.out.println(contract.getCustomerInfo() + " " + contract.getOrderNum() + " " + contract.getSalesRep());
-        }
+        ClassLoader classLoader = this.getClass().getClassLoader();
+        ArrayList<Row> detailTemplate = new ArrayList<>();
+        ArrayList<ArrayList<Row>> sheetData = new ArrayList<>();
 
-        //look for directory
-        //if none, create directory (from configManager)
-        //write workbook to file
+        if (spreadsheet) {
+            try {
+                Workbook workbook = WorkbookFactory.create(new File(classLoader.getResource("com/noahkurrack/IFCommissions/assets/contract_detail_template.xlsx").getFile()));
+                Sheet sheet = workbook.getSheetAt(0);
+                Iterator<Row> iterator = sheet.iterator();
+
+                while (iterator.hasNext()) {
+                    detailTemplate.add(iterator.next());
+                }
+
+                for (Contract contract: contracts) {
+                    //create row for each contract, add to sheet
+                    ArrayList<Row> contractEntry = new ArrayList<>(detailTemplate);
+
+                    contractEntry.get(0).getCell(1).setCellValue(contract.getCustomerInfo());
+                    contractEntry.get(1).getCell(1).setCellValue(contract.getSalesRep());
+
+                    //add new row to contractEntry for each part
+
+                    sheetData.add(contractEntry);
+
+                    System.out.println(contract.getCustomerInfo() + " " + contract.getOrderNum() + " " + contract.getSalesRep());
+                }
+
+                XSSFWorkbook newWorkbook = new XSSFWorkbook();
+                XSSFSheet newSheet = newWorkbook.createSheet("Commissions");
+                CellCopyPolicy cellCopyPolicy = new CellCopyPolicy();
+                cellCopyPolicy.setCopyCellStyle(false);
+                cellCopyPolicy.setCopyCellFormula(false);
+
+                //create empty row at top to trick copyRowFrom function
+                newSheet.createRow(1);
+                int rowIndex = 1;
+                for (ArrayList<Row> entry : sheetData) {
+                    for (Row row : entry) {
+                        newSheet.createRow(rowIndex).copyRowFrom(row, cellCopyPolicy);
+                        rowIndex++;
+                    }
+                    //blank row
+                    newSheet.createRow(rowIndex);
+                    rowIndex++;
+                }
+
+                try {
+                    System.out.println("Writing detail file.");
+                    FileOutputStream outputStream = new FileOutputStream(outputDirectory.getName()+"/"+outputFiles.get(0));
+                    newWorkbook.write(outputStream);
+                    newWorkbook.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+            } catch (IOException | InvalidFormatException e) {
+                e.printStackTrace();
+            }
+        }
+        if (employeeSpreadsheet) {
+            //per employee spreadsheet
+        }
     }
 
     public void setOutputDirectory(File directory) {

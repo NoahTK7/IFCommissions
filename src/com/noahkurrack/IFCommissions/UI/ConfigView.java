@@ -66,7 +66,6 @@ public class ConfigView {
     private void createUIComponents() {
         configTable = new JTable();
 
-        //TODO
         configTableModel = new ConfigTableModel(getDeepCopy(IFCommissions.getConfigManager().getItems()));
         configTable.setModel(configTableModel);
 

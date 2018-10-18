@@ -108,9 +108,11 @@ public class Contract {
                 if (item.getPart().equalsIgnoreCase(part.getId())) {
                     found = true;
                     if (part.getQuantity()>1) {
-                        cost += item.getCost() * part.getQuantity();
+                        part.setCost(item.getCost());
+                        cost += part.getTotalCost();
                     } else {
-                        cost += item.getCost();
+                        part.setCost(item.getCost());
+                        cost += part.getTotalCost();
                     }
                 }
             }
@@ -213,17 +215,21 @@ public class Contract {
         private String id;
         private String description;
         private double quantity;
+        private double cost;
+        private double totalCost;
 
         Part(String id, String d) {
             this.id = id;
             this.description = d;
             this.quantity = 1;
+            this.cost = 0;
         }
 
         Part(String id, String d, double quantity) {
             this.id = id;
             this.description = d;
             this.quantity = quantity;
+            this.cost = 0;
         }
 
         public String getId() {
@@ -236,6 +242,15 @@ public class Contract {
 
         public double getQuantity() {
             return quantity;
+        }
+
+        public double getTotalCost() {
+            return totalCost;
+        }
+
+        public void setCost(double cost) {
+            this.cost = cost;
+            totalCost = this.cost * this.quantity;
         }
     }
 }
