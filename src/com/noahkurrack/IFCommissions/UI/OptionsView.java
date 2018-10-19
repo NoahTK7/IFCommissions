@@ -26,17 +26,21 @@ public class OptionsView {
     }
 
     private void attachListeners() {
+        continueButton.setEnabled(false);
+
         optionsPanel.addComponentListener(new ComponentAdapter() {
             @Override
             public void componentShown(ComponentEvent e) {
                 super.componentShown(e);
                 IFCommissions.getInstance().processContracts();
+                continueButton.setEnabled(true);
             }
         });
         continueButton.addActionListener(e -> {
             IFCommissions.getGui().setRunView();
         });
         backButton.addActionListener(e -> {
+            continueButton.setEnabled(false);
             IFCommissions.getGui().setSetupView();
         });
     }

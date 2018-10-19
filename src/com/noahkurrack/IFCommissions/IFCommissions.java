@@ -139,13 +139,17 @@ public class IFCommissions {
     private void output() {
         //TODO: output
 
+        if (outputDirectory == null) {
+            //no output
+            return;
+        }
+
         if (!this.outputDirectory.isDirectory()) {
             this.outputDirectory.mkdir();
         }
 
         ClassLoader classLoader = this.getClass().getClassLoader();
         ArrayList<Row> detailTemplate = new ArrayList<>();
-        ArrayList<ArrayList<Row>> sheetData = new ArrayList<>();
 
         if (spreadsheet) {
             try {
@@ -157,20 +161,6 @@ public class IFCommissions {
                     detailTemplate.add(iterator.next());
                 }
 
-                for (Contract contract: contracts) {
-                    //create row for each contract, add to sheet
-                    ArrayList<Row> contractEntry = new ArrayList<>(detailTemplate);
-
-                    contractEntry.get(0).getCell(1).setCellValue(contract.getCustomerInfo());
-                    contractEntry.get(1).getCell(1).setCellValue(contract.getSalesRep());
-
-                    //add new row to contractEntry for each part
-
-                    sheetData.add(contractEntry);
-
-                    System.out.println(contract.getCustomerInfo() + " " + contract.getOrderNum() + " " + contract.getSalesRep());
-                }
-
                 XSSFWorkbook newWorkbook = new XSSFWorkbook();
                 XSSFSheet newSheet = newWorkbook.createSheet("Commissions");
                 CellCopyPolicy cellCopyPolicy = new CellCopyPolicy();
@@ -178,20 +168,70 @@ public class IFCommissions {
                 cellCopyPolicy.setCopyCellFormula(false);
 
                 //create empty row at top to trick copyRowFrom function
-                newSheet.createRow(1);
+                newSheet.createRow(0);
                 int rowIndex = 1;
-                for (ArrayList<Row> entry : sheetData) {
-                    for (Row row : entry) {
-                        newSheet.createRow(rowIndex).copyRowFrom(row, cellCopyPolicy);
+                for (Contract contract: contracts) {
+                    newSheet.createRow(rowIndex).copyRowFrom(detailTemplate.get(0), cellCopyPolicy);
+                    newSheet.getRow(rowIndex).getCell(1).setCellValue(contract.getCustomerInfo());
+                    rowIndex++;
+
+                    newSheet.createRow(rowIndex).copyRowFrom(detailTemplate.get(1), cellCopyPolicy);
+                    newSheet.getRow(rowIndex).getCell(1).setCellValue(contract.getSalesRep());
+                    rowIndex++;
+
+                    newSheet.createRow(rowIndex).copyRowFrom(detailTemplate.get(2), cellCopyPolicy);
+                    rowIndex++;
+
+                    CellStyle dollarStyle = newWorkbook.createCellStyle();
+                    dollarStyle.setDataFormat((short)8);
+                    CellStyle percentageStyle = newWorkbook.createCellStyle();
+                    percentageStyle.setDataFormat((short)9);
+
+                    //TODO: add new row to contractEntry for each part
+                    for (Contract.Part part : contract.getParts()) {
+                        newSheet.createRow(rowIndex).copyRowFrom(detailTemplate.get(3), cellCopyPolicy);
+                        newSheet.getRow(rowIndex).getCell(0).setCellValue(part.getId());
+                        newSheet.getRow(rowIndex).getCell(1).setCellValue(part.getDescription());
+                        newSheet.getRow(rowIndex).getCell(2).setCellValue(part.getQuantity());
+                        newSheet.getRow(rowIndex).getCell(3).setCellValue(part.getTotalCost());
+                        newSheet.getRow(rowIndex).getCell(3).setCellStyle(dollarStyle);
                         rowIndex++;
                     }
+
+                    newSheet.createRow(rowIndex).copyRowFrom(detailTemplate.get(4), cellCopyPolicy);
+                    newSheet.getRow(rowIndex).getCell(3).setCellValue(contract.getCost());
+                    newSheet.getRow(rowIndex).getCell(3).setCellStyle(dollarStyle);
+                    rowIndex++;
+
+                    newSheet.createRow(rowIndex).copyRowFrom(detailTemplate.get(5), cellCopyPolicy);
+                    newSheet.getRow(rowIndex).getCell(3).setCellValue(contract.getSubtotal());
+                    newSheet.getRow(rowIndex).getCell(3).setCellStyle(dollarStyle);
+                    rowIndex++;
+
+                    newSheet.createRow(rowIndex).copyRowFrom(detailTemplate.get(6), cellCopyPolicy);
+                    newSheet.getRow(rowIndex).getCell(3).setCellValue(contract.getProfit());
+                    newSheet.getRow(rowIndex).getCell(3).setCellStyle(dollarStyle);
+                    rowIndex++;
+
+                    newSheet.createRow(rowIndex).copyRowFrom(detailTemplate.get(7), cellCopyPolicy);
+                    newSheet.getRow(rowIndex).getCell(3).setCellValue(contract.getCommissionPercent()/100);
+                    newSheet.getRow(rowIndex).getCell(3).setCellStyle(percentageStyle);
+                    rowIndex++;
+
+                    newSheet.createRow(rowIndex).copyRowFrom(detailTemplate.get(8), cellCopyPolicy);
+                    newSheet.getRow(rowIndex).getCell(3).setCellValue(contract.getCommission());
+                    newSheet.getRow(rowIndex).getCell(3).setCellStyle(dollarStyle);
+                    rowIndex++;
+
                     //blank row
                     newSheet.createRow(rowIndex);
                     rowIndex++;
+
+                    System.out.println(contract.getCustomerInfo() + " " + contract.getOrderNum() + " " + contract.getSalesRep());
                 }
 
                 try {
-                    System.out.println("Writing detail file.");
+                    System.out.println("Writing detail file...");
                     FileOutputStream outputStream = new FileOutputStream(outputDirectory.getName()+"/"+outputFiles.get(0));
                     newWorkbook.write(outputStream);
                     newWorkbook.close();
@@ -204,7 +244,7 @@ public class IFCommissions {
             }
         }
         if (employeeSpreadsheet) {
-            //per employee spreadsheet
+            //TODO: per employee spreadsheet
         }
     }
 

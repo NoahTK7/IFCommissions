@@ -90,10 +90,8 @@ public class Contract {
             String description = sheet.getRow(i).getCell(5).getStringCellValue().trim();
             double quantity = sheet.getRow(i).getCell(25).getNumericCellValue();
             //fields with quantities
-            if (quantity>1) {
-                this.parts.add(new Part(part, description, quantity));
-            }
-            this.parts.add(new Part(part, description));
+            //TODO: ensure all other quantities will remain 1
+            this.parts.add(new Part(part, description, quantity));
         }
 
         //get subtotal
@@ -210,20 +208,21 @@ public class Contract {
         this.addPercentage = addPercentage;
     }
 
-    class Part{
+    public ArrayList<Part> getParts() {
+        return parts;
+    }
+
+    public double getCost() {
+        return cost;
+    }
+
+    public class Part{
 
         private String id;
         private String description;
         private double quantity;
         private double cost;
         private double totalCost;
-
-        Part(String id, String d) {
-            this.id = id;
-            this.description = d;
-            this.quantity = 1;
-            this.cost = 0;
-        }
 
         Part(String id, String d, double quantity) {
             this.id = id;
