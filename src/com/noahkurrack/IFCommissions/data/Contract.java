@@ -12,10 +12,7 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 
 import javax.swing.*;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 
 public class Contract {
@@ -51,7 +48,17 @@ public class Contract {
         addPercentage = 0;
 
         this.workbook = wb;
-        extractData();
+        try {
+            extractData();
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(
+                    IFCommissions.getGui(),
+                    "Spreadsheet cannot be read... skipping...",
+                    "Contract error",
+                    JOptionPane.ERROR_MESSAGE
+            );
+            System.out.println("Could not read spreadsheet...skipping.");
+        }
     }
 
     public void process() {
@@ -69,7 +76,6 @@ public class Contract {
         this.salesRep = sheet.getRow(18).getCell(28).getStringCellValue();
 
         this.date = infoRow.getCell(8).getDateCellValue();
-        //TODO: Check proper date
 
         //end row used as reference to end of parts section of contract (varies)
         int endRow = -1;
@@ -90,8 +96,11 @@ public class Contract {
             String description = sheet.getRow(i).getCell(5).getStringCellValue().trim();
             double quantity = sheet.getRow(i).getCell(25).getNumericCellValue();
             //fields with quantities
-            //TODO: ensure all other quantities will remain 1
-            this.parts.add(new Part(part, description, quantity));
+            if (quantity>1) {
+                this.parts.add(new Part(part, description, quantity));
+            } else {
+                this.parts.add(new Part(part, description, 1));
+            }
         }
 
         //get subtotal
@@ -115,7 +124,7 @@ public class Contract {
                 }
             }
             if (!found) {
-                System.out.println("error: part not found: " + part.getId() + ". add to config file or part will be ignored.");
+                //System.out.println("error: part not found: " + part.getId() + ". add to config file or part will be ignored.");
                 boolean exists = false;
                 for (Part p: notFound) {
                     if (p.getId().equals(part.getId())) exists = true;
@@ -125,7 +134,7 @@ public class Contract {
                 }
             }
         }
-        System.out.println("cost: "+cost);
+        //System.out.println("cost: "+cost);
     }
 
     private void calculateCommission() {
@@ -214,42 +223,5 @@ public class Contract {
 
     public double getCost() {
         return cost;
-    }
-
-    public class Part{
-
-        private String id;
-        private String description;
-        private double quantity;
-        private double cost;
-        private double totalCost;
-
-        Part(String id, String d, double quantity) {
-            this.id = id;
-            this.description = d;
-            this.quantity = quantity;
-            this.cost = 0;
-        }
-
-        public String getId() {
-            return id;
-        }
-
-        public String getDescription() {
-            return description;
-        }
-
-        public double getQuantity() {
-            return quantity;
-        }
-
-        public double getTotalCost() {
-            return totalCost;
-        }
-
-        public void setCost(double cost) {
-            this.cost = cost;
-            totalCost = this.cost * this.quantity;
-        }
     }
 }

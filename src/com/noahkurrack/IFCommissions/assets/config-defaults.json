@@ -11,11 +11,6 @@
       "cost": 0.6
     },
     {
-      "item": "Custom Hand Work",
-      "description": "Hand Work Install",
-      "cost": 0.3
-    },
-    {
       "item": "PVC",
       "description": "PVC",
       "cost": 0.6
@@ -28,7 +23,7 @@
     {
       "item": "Digital Safety Solution",
       "description": "Digital Safety Solution - Containment",
-      "cost": 220
+      "cost": 175
     },
     {
       "item": "Saturday Installation",
@@ -38,12 +33,12 @@
     {
       "item": "RIG00-11350",
       "description": "B+ Single Loop Trans",
-      "cost": 267
+      "cost": 271
     },
     {
       "item": "Boundary Plus Transmitter",
       "description": "B+ Dual LoopTransmitter",
-      "cost": 300
+      "cost": 304
     },
     {
       "item": "RIG00-11933",
@@ -53,17 +48,17 @@
     {
       "item": "RIG00-13546",
       "description": "MicroLite + Plus Receiver",
-      "cost": 224
+      "cost": 223
     },
     {
       "item": "RIG00-13144",
       "description": "ML2 - MicroLite Graphite",
-      "cost": 166
+      "cost": 165
     },
     {
       "item": "RIG00-14107",
       "description": "Shields Computer Collar",
-      "cost": 95
+      "cost": 94
     },
     {
       "item": "RIF00-15976",
@@ -144,6 +139,36 @@
       "item": "PBC00-12726",
       "description": "Deluxe Little Dog Bark Control",
       "cost": 58
+    },
+    {
+      "item": "BP-3v03-04",
+      "description": "PowerCap Program: 4 per year",
+      "cost": 32
+    },
+    {
+      "item": "BP-3v03-08",
+      "description": "PowerCap Program: 4 per year x 2 years",
+      "cost": 64
+    },
+    {
+      "item": "GPS 3.0 Wireless Containment",
+      "description": "GPS 3.0 Wireless Containment",
+      "cost": 250
+    },
+    {
+      "item": "2nd Technician - Installation",
+      "description": "2nd Technician - Installation",
+      "cost": 80
+    },
+    {
+      "item": "RIF00-15977",
+      "description": "GPS 3.0 Base",
+      "cost": 658
+    },
+    {
+      "item": "Training (2 Visits)",
+      "description": "Perfect Start ™ Training",
+      "cost": 40
     }
   ]
 }
