@@ -21,7 +21,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Date;
-import java.util.Iterator;
 
 public class IFCommissions {
 
@@ -114,10 +113,8 @@ public class IFCommissions {
             String fileName = "contracts.xlsx";
             outputFiles.add(fileName);
         }
-        // TODO: generate employee file names
-        if (employeeSpreadsheet) {
-            outputFiles.add("empSpread");
-        }
+
+        //employee spreadsheets generated in output function
 
         gui.getRunView().setStats(outputFiles, activeFiles.size());
 
@@ -147,7 +144,7 @@ public class IFCommissions {
             return;
         }
 
-        String timestamp = new SimpleDateFormat("MMdd_HHmmss").format(new Date());
+        String timestamp = new SimpleDateFormat("EEE, MMM d, HH:mm").format(new Date());
         String dirName = "/contract data " + timestamp;
         this.outputDirectory = new File(this.outputDirectory.getCanonicalPath()+dirName);
 
@@ -161,10 +158,9 @@ public class IFCommissions {
         if (spreadsheet) {
             Workbook workbook = WorkbookFactory.create(new File(classLoader.getResource("com/noahkurrack/IFCommissions/assets/contract_detail_template.xlsx").getFile()));
             Sheet sheet = workbook.getSheetAt(0);
-            Iterator<Row> iterator = sheet.iterator();
 
-            while (iterator.hasNext()) {
-                detailTemplate.add(iterator.next());
+            for (Row aSheet : sheet) {
+                detailTemplate.add(aSheet);
             }
 
             XSSFWorkbook newWorkbook = new XSSFWorkbook();
@@ -188,8 +184,13 @@ public class IFCommissions {
                 newSheet.getRow(rowIndex).getCell(1).setCellValue(contract.getSalesRep());
                 rowIndex++;
 
+                CellStyle tableHeader = newWorkbook.createCellStyle();
+                tableHeader.setBorderBottom(BorderStyle.THIN);
+
                 newSheet.createRow(rowIndex).copyRowFrom(detailTemplate.get(2), cellCopyPolicy);
-                //TODO: Bold?/bottom border
+                for (Cell cell : newSheet.getRow(rowIndex)) {
+                    cell.setCellStyle(tableHeader);
+                }
                 rowIndex++;
 
                 CellStyle dollarStyle = newWorkbook.createCellStyle();
@@ -246,7 +247,109 @@ public class IFCommissions {
         }
 
         if (employeeSpreadsheet) {
-            //TODO: per employee spreadsheet
+            ArrayList<String> employees = new ArrayList<>();
+            for (Contract contract : contracts) {
+                if (!employees.contains(contract.getSalesRep())){
+                    employees.add(contract.getSalesRep());
+                }
+            }
+
+            ArrayList<String> fileNames = new ArrayList<>();
+            for (String rep : employees) {
+                fileNames.add("contracts "+rep+".xlsx");
+            }
+
+            for (String rep : employees) {
+                Workbook workbook = WorkbookFactory.create(new File(classLoader.getResource("com/noahkurrack/IFCommissions/assets/contract_detail_template.xlsx").getFile()));
+                Sheet sheet = workbook.getSheetAt(0);
+
+                for (Row aSheet : sheet) {
+                    detailTemplate.add(aSheet);
+                }
+
+                XSSFWorkbook newWorkbook = new XSSFWorkbook();
+                XSSFSheet newSheet = newWorkbook.createSheet("Commissions");
+                CellCopyPolicy cellCopyPolicy = new CellCopyPolicy();
+                cellCopyPolicy.setCopyCellStyle(false);
+                cellCopyPolicy.setCopyCellFormula(false);
+
+                //create empty row at top to trick copyRowFrom function
+                String timeGenerated = new SimpleDateFormat("EEE, MMM d, yyyy 'at' HH:mm:ss a").format(new Date());
+                newSheet.createRow(0).createCell(0).setCellValue("Generated: " + timeGenerated);
+                newSheet.getRow(0).createCell(1);
+                newSheet.addMergedRegion(new CellRangeAddress(0, 0, 0, 1));
+                int rowIndex = 1;
+                for (Contract contract : contracts) {
+                    if (!contract.getSalesRep().equals(rep)) continue;
+
+                    newSheet.createRow(rowIndex).copyRowFrom(detailTemplate.get(0), cellCopyPolicy);
+                    newSheet.getRow(rowIndex).getCell(1).setCellValue(contract.getCustomerInfo());
+                    rowIndex++;
+
+                    newSheet.createRow(rowIndex).copyRowFrom(detailTemplate.get(1), cellCopyPolicy);
+                    newSheet.getRow(rowIndex).getCell(1).setCellValue(contract.getSalesRep());
+                    rowIndex++;
+
+                    CellStyle tableHeader = newWorkbook.createCellStyle();
+                    tableHeader.setBorderBottom(BorderStyle.THIN);
+
+                    newSheet.createRow(rowIndex).copyRowFrom(detailTemplate.get(2), cellCopyPolicy);
+                    for (Cell cell : newSheet.getRow(rowIndex)) {
+                        cell.setCellStyle(tableHeader);
+                    }
+                    rowIndex++;
+
+                    CellStyle dollarStyle = newWorkbook.createCellStyle();
+                    dollarStyle.setDataFormat((short) 8);
+                    CellStyle percentageStyle = newWorkbook.createCellStyle();
+                    percentageStyle.setDataFormat((short) 9);
+
+                    for (Part part : contract.getParts()) {
+                        newSheet.createRow(rowIndex).copyRowFrom(detailTemplate.get(3), cellCopyPolicy);
+                        newSheet.getRow(rowIndex).getCell(0).setCellValue(part.getId());
+                        newSheet.getRow(rowIndex).getCell(1).setCellValue(part.getDescription());
+                        newSheet.getRow(rowIndex).getCell(2).setCellValue(part.getQuantity());
+                        newSheet.getRow(rowIndex).getCell(3).setCellValue(part.getTotalCost());
+                        newSheet.getRow(rowIndex).getCell(3).setCellStyle(dollarStyle);
+                        rowIndex++;
+                    }
+
+                    newSheet.createRow(rowIndex).copyRowFrom(detailTemplate.get(4), cellCopyPolicy);
+                    newSheet.getRow(rowIndex).getCell(3).setCellValue(contract.getCost());
+                    newSheet.getRow(rowIndex).getCell(3).setCellStyle(dollarStyle);
+                    rowIndex++;
+
+                    newSheet.createRow(rowIndex).copyRowFrom(detailTemplate.get(5), cellCopyPolicy);
+                    newSheet.getRow(rowIndex).getCell(3).setCellValue(contract.getSubtotal());
+                    newSheet.getRow(rowIndex).getCell(3).setCellStyle(dollarStyle);
+                    rowIndex++;
+
+                    newSheet.createRow(rowIndex).copyRowFrom(detailTemplate.get(6), cellCopyPolicy);
+                    newSheet.getRow(rowIndex).getCell(3).setCellValue(contract.getProfit());
+                    newSheet.getRow(rowIndex).getCell(3).setCellStyle(dollarStyle);
+                    rowIndex++;
+
+                    newSheet.createRow(rowIndex).copyRowFrom(detailTemplate.get(7), cellCopyPolicy);
+                    newSheet.getRow(rowIndex).getCell(3).setCellValue(contract.getCommissionPercent() / 100);
+                    newSheet.getRow(rowIndex).getCell(3).setCellStyle(percentageStyle);
+                    rowIndex++;
+
+                    newSheet.createRow(rowIndex).copyRowFrom(detailTemplate.get(8), cellCopyPolicy);
+                    newSheet.getRow(rowIndex).getCell(3).setCellValue(contract.getCommission());
+                    newSheet.getRow(rowIndex).getCell(3).setCellStyle(dollarStyle);
+                    rowIndex++;
+
+                    //blank row
+                    newSheet.createRow(rowIndex);
+                    rowIndex++;
+                }
+
+                System.out.println("Writing employee ("+rep+") file...");
+                String file = fileNames.get(employees.indexOf(rep));
+                FileOutputStream outputStream = new FileOutputStream(outputDirectory.getCanonicalPath() + "/" + file);
+                newWorkbook.write(outputStream);
+                newWorkbook.close();
+            }
         }
     }
 
