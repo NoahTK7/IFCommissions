@@ -156,7 +156,7 @@ public class IFCommissions {
         ArrayList<Row> detailTemplate = new ArrayList<>();
 
         if (spreadsheet) {
-            Workbook workbook = WorkbookFactory.create(new File(classLoader.getResource("com/noahkurrack/IFCommissions/assets/contract_detail_template.xlsx").getFile()));
+            Workbook workbook = WorkbookFactory.create(new File(classLoader.getResource("assets/contract_detail_template.xlsx").getFile()));
             Sheet sheet = workbook.getSheetAt(0);
 
             for (Row aSheet : sheet) {
@@ -260,7 +260,7 @@ public class IFCommissions {
             }
 
             for (String rep : employees) {
-                Workbook workbook = WorkbookFactory.create(new File(classLoader.getResource("com/noahkurrack/IFCommissions/assets/contract_detail_template.xlsx").getFile()));
+                Workbook workbook = WorkbookFactory.create(new File(classLoader.getResource("assets/contract_detail_template.xlsx").getFile()));
                 Sheet sheet = workbook.getSheetAt(0);
 
                 for (Row aSheet : sheet) {

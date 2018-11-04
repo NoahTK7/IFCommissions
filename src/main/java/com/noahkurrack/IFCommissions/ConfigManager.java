@@ -27,8 +27,8 @@ public class ConfigManager {
         items = new ArrayList<>();
 
         ClassLoader classLoader = this.getClass().getClassLoader();
-        this.defaultConfig = new File(classLoader.getResource("com/noahkurrack/IFCommissions/assets/config-defaults.json").getFile());
-        this.configFile = new File(classLoader.getResource("com/noahkurrack/IFCommissions/assets/config.json").getFile());
+        this.defaultConfig = new File(classLoader.getResource("assets/config-defaults.json").getFile());
+        this.configFile = new File(classLoader.getResource("assets/config.json").getFile());
 
         if (new BufferedReader(new FileReader(configFile)).readLine()==null) {
             configFile.delete();
