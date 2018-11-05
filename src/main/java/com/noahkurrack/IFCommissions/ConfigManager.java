@@ -27,12 +27,13 @@ public class ConfigManager {
         items = new ArrayList<>();
 
         ClassLoader classLoader = this.getClass().getClassLoader();
-        this.defaultConfig = new File(classLoader.getResource("assets/config-defaults.json").getFile());
-        this.configFile = new File(classLoader.getResource("assets/config.json").getFile());
+        InputStream defaultConfigStream = IFCommissions.class.getClassLoader().getResourceAsStream("config-defaults.json");
+        InputStream configStream = IFCommissions.class.getClassLoader().getResourceAsStream("config.json");
+        this.defaultConfig = Utils.stream2file(defaultConfigStream, "defaultConfig");
+        this.configFile = Utils.stream2file(configStream, "config");
 
         if (new BufferedReader(new FileReader(configFile)).readLine()==null) {
-            configFile.delete();
-            Files.copy(defaultConfig.toPath(), configFile.toPath());
+            configFile = File.createTempFile("config", null);
         }
 
         updateConfig();

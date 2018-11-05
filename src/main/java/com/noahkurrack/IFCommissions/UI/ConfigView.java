@@ -8,6 +8,7 @@ package com.noahkurrack.IFCommissions.UI;
 
 import com.noahkurrack.IFCommissions.IFCommissions;
 import com.noahkurrack.IFCommissions.UI.util.ConfigTableModel;
+import com.noahkurrack.IFCommissions.Utils;
 import com.noahkurrack.IFCommissions.data.ConfigItem;
 
 import javax.swing.*;
@@ -54,7 +55,7 @@ public class ConfigView {
             public void componentShown(ComponentEvent e) {
                 super.componentShown(e);
                 //record snapshot of table when panel shown
-                configSnapshot = getDeepCopy(((ConfigTableModel) configTable.getModel()).getConfigList());
+                configSnapshot = Utils.getDeepCopy(((ConfigTableModel) configTable.getModel()).getConfigList());
             }
         });
     }
@@ -66,7 +67,7 @@ public class ConfigView {
     private void createUIComponents() {
         configTable = new JTable();
 
-        configTableModel = new ConfigTableModel(getDeepCopy(IFCommissions.getConfigManager().getItems()));
+        configTableModel = new ConfigTableModel(Utils.getDeepCopy(IFCommissions.getConfigManager().getItems()));
         configTable.setModel(configTableModel);
 
         configTable.getColumnModel().getColumn(2).setMaxWidth(100);
@@ -111,15 +112,6 @@ public class ConfigView {
 
     private void restoreDefaults() {
         IFCommissions.getConfigManager().restoreDefaults();
-        configTableModel.setConfigList(getDeepCopy(IFCommissions.getConfigManager().getItems()));
-    }
-
-    //returns new array in memory with new config item objects
-    private ArrayList<ConfigItem> getDeepCopy(ArrayList<ConfigItem> in) {
-        ArrayList<ConfigItem> configItemsCopy = new ArrayList<>();
-        for (ConfigItem item : in) {
-            configItemsCopy.add(new ConfigItem(item));
-        }
-        return configItemsCopy;
+        configTableModel.setConfigList(Utils.getDeepCopy(IFCommissions.getConfigManager().getItems()));
     }
 }

@@ -13,6 +13,7 @@
     <groupId>com.noahkurrack</groupId>
     <artifactId>IFCommissions</artifactId>
     <version>1.0-SNAPSHOT</version>
+    <packaging>jar</packaging>
 
     <properties>
         <jdk.version>1.8</jdk.version>

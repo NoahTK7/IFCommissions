@@ -1,0 +1,4 @@
+Manifest-Version: 1.0
+Class-Path: . lib/json-simple-1.1.1.jar lib/poi-ooxml-3.17.jar
+Main-Class: com.noahkurrack.IFCommissions.IFCommissions
+

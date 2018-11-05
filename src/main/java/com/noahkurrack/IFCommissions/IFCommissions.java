@@ -99,7 +99,7 @@ public class IFCommissions {
                 e.printStackTrace();
             }
             //System.out.println(file.getName());
-            Contract contract = new Contract(workbook);
+            Contract contract = new Contract(workbook, file);
             contracts.add(contract);
         }
 
@@ -156,7 +156,8 @@ public class IFCommissions {
         ArrayList<Row> detailTemplate = new ArrayList<>();
 
         if (spreadsheet) {
-            Workbook workbook = WorkbookFactory.create(new File(classLoader.getResource("assets/contract_detail_template.xlsx").getFile()));
+            InputStream templateStream = IFCommissions.class.getClassLoader().getResourceAsStream("contract_detail_template.xlsx");
+            Workbook workbook = WorkbookFactory.create(Utils.stream2file(templateStream, "template"));
             Sheet sheet = workbook.getSheetAt(0);
 
             for (Row aSheet : sheet) {
@@ -260,7 +261,8 @@ public class IFCommissions {
             }
 
             for (String rep : employees) {
-                Workbook workbook = WorkbookFactory.create(new File(classLoader.getResource("assets/contract_detail_template.xlsx").getFile()));
+                InputStream templateStream = IFCommissions.class.getClassLoader().getResourceAsStream("contract_detail_template.xlsx");
+                Workbook workbook = WorkbookFactory.create(Utils.stream2file(templateStream, "template"+rep));
                 Sheet sheet = workbook.getSheetAt(0);
 
                 for (Row aSheet : sheet) {

@@ -12,12 +12,14 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 
 import javax.swing.*;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Date;
 
 public class Contract {
 
     private Workbook workbook;
+    private File file;
 
     private String customerInfo;
     private long orderNum;
@@ -38,7 +40,7 @@ public class Contract {
 
     private double addPercentage;
 
-    public Contract(Workbook wb) {
+    public Contract(Workbook wb, File file) {
         this.parts = new ArrayList<>();
         this.commission = -1;
         this.cost = 0;
@@ -48,6 +50,8 @@ public class Contract {
         addPercentage = 0;
 
         this.workbook = wb;
+        this.file = file;
+
         try {
             extractData();
         } catch (Exception e) {
@@ -57,7 +61,7 @@ public class Contract {
                     "Contract error",
                     JOptionPane.ERROR_MESSAGE
             );
-            System.out.println("Could not read spreadsheet...skipping.");
+            System.out.println("Could not read spreadsheet ("+this.file+")...skipping.");
         }
     }
 
