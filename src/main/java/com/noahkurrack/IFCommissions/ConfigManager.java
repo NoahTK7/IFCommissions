@@ -53,6 +53,11 @@ public class ConfigManager {
             e.printStackTrace();
         }
 
+        if (configs==null) {
+            restoreDefaults();
+            return;
+        }
+
         for (Object obj : configs) {
             String name = ((JSONObject) obj).get("item").toString();
             String description = ((JSONObject) obj).get("description").toString();

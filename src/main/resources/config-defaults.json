@@ -16,6 +16,11 @@
       "cost": 0.6
     },
     {
+      "item": "Custom Hand Work",
+      "description": "Hand Work Install",
+      "cost": 0.3
+    },
+    {
       "item": "Boundary Plus Safety Solution",
       "description": "Boundary Plus Safety Solution",
       "cost": 174
@@ -48,7 +53,7 @@
     {
       "item": "RIG00-13546",
       "description": "MicroLite + Plus Receiver",
-      "cost": 223
+      "cost": 224
     },
     {
       "item": "RIG00-13144",
@@ -169,6 +174,11 @@
       "item": "Training (2 Visits)",
       "description": "Perfect Start ™ Training",
       "cost": 40
+    },
+    {
+      "item": "Driveway",
+      "description": "Driveway Cut-New ",
+      "cost": 10
     }
   ]
 }

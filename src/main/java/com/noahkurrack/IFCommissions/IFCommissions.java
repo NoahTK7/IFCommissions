@@ -91,7 +91,7 @@ public class IFCommissions {
             contracts.clear();
         }
 
-        for (File file: activeFiles) {
+        for (File file : activeFiles) {
             Workbook workbook = null;
             try {
                 workbook = WorkbookFactory.create(file);
@@ -99,8 +99,12 @@ public class IFCommissions {
                 e.printStackTrace();
             }
             //System.out.println(file.getName());
-            Contract contract = new Contract(workbook, file);
-            contracts.add(contract);
+            try {
+                Contract contract = new Contract(workbook, file);
+                contracts.add(contract);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
 
         contracts.sort(Comparator.comparing(Contract::getDate));
@@ -242,7 +246,8 @@ public class IFCommissions {
             }
 
             System.out.println("Writing detail file...");
-            FileOutputStream outputStream = new FileOutputStream(outputDirectory.getCanonicalPath() + "/" + outputFiles.get(0));
+            String path = new File(outputDirectory.getCanonicalPath() + "/" + outputFiles.get(0)).getCanonicalPath();
+            FileOutputStream outputStream = new FileOutputStream(path);
             newWorkbook.write(outputStream);
             newWorkbook.close();
         }
@@ -348,7 +353,8 @@ public class IFCommissions {
 
                 System.out.println("Writing employee ("+rep+") file...");
                 String file = fileNames.get(employees.indexOf(rep));
-                FileOutputStream outputStream = new FileOutputStream(outputDirectory.getCanonicalPath() + "/" + file);
+                String path = new File(outputDirectory.getCanonicalPath() + "/" + file).getCanonicalPath();
+                FileOutputStream outputStream = new FileOutputStream(path);
                 newWorkbook.write(outputStream);
                 newWorkbook.close();
             }
@@ -371,3 +377,5 @@ public class IFCommissions {
         this.employeeSpreadsheet = employeeSpreadsheet;
     }
 }
+//TODO: sort files alphabetically in setup view;
+//TODO: add config for handwork, driveway

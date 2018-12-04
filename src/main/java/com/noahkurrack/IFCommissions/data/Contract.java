@@ -19,7 +19,6 @@ import java.util.Date;
 public class Contract {
 
     private Workbook workbook;
-    private File file;
 
     private String customerInfo;
     private long orderNum;
@@ -50,7 +49,6 @@ public class Contract {
         addPercentage = 0;
 
         this.workbook = wb;
-        this.file = file;
 
         try {
             extractData();
@@ -61,8 +59,12 @@ public class Contract {
                     "Contract error",
                     JOptionPane.ERROR_MESSAGE
             );
-            System.out.println("Could not read spreadsheet ("+this.file+")...skipping.");
+            System.out.println("Could not read spreadsheet ("+ file +")...skipping.");
         }
+
+        boolean error =  false;
+        //TODO: do checks (e.g. date)
+
     }
 
     public void process() {
@@ -95,11 +97,12 @@ public class Contract {
             }
         }
         //get parts
-        for (int i = 23; i < endRow-2; i++) {
+        for (int i = 23; i <= endRow-2; i++) {
             String part = sheet.getRow(i).getCell(0).getStringCellValue().trim();
             String description = sheet.getRow(i).getCell(5).getStringCellValue().trim();
             double quantity = sheet.getRow(i).getCell(25).getNumericCellValue();
             //fields with quantities
+            //weird but some fields have 0 when quantity should be 1
             if (quantity>1) {
                 this.parts.add(new Part(part, description, quantity));
             } else {
@@ -109,6 +112,7 @@ public class Contract {
 
         //get subtotal
         this.subtotal = sheet.getRow(endRow).getCell(29).getNumericCellValue();
+        this.subtotal = Math.floor(this.subtotal);
     }
 
     private void calculateCost() {
@@ -138,11 +142,12 @@ public class Contract {
                 }
             }
         }
+        this.cost = Math.floor(this.cost);
         //System.out.println("cost: "+cost);
     }
 
     private void calculateCommission() {
-        this.profit = this.subtotal - this.cost;
+        this.profit = Math.floor(this.subtotal - this.cost);
         int profitPercentage = (int) Math.round(this.profit / this.cost * 100);
 
         if (profitPercentage <= 68) {
