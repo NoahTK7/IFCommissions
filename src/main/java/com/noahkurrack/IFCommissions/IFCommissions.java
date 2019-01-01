@@ -156,12 +156,11 @@ public class IFCommissions {
             this.outputDirectory.mkdir();
         }
 
-        ClassLoader classLoader = this.getClass().getClassLoader();
         ArrayList<Row> detailTemplate = new ArrayList<>();
 
         if (spreadsheet) {
             InputStream templateStream = IFCommissions.class.getClassLoader().getResourceAsStream("contract_detail_template.xlsx");
-            Workbook workbook = WorkbookFactory.create(Utils.stream2file(templateStream, "template"));
+            Workbook workbook = WorkbookFactory.create(templateStream);
             Sheet sheet = workbook.getSheetAt(0);
 
             for (Row aSheet : sheet) {
@@ -246,7 +245,7 @@ public class IFCommissions {
             }
 
             System.out.println("Writing detail file...");
-            String path = new File(outputDirectory.getCanonicalPath() + "/" + outputFiles.get(0)).getCanonicalPath();
+            String path = new File(outputDirectory.getCanonicalPath(), outputFiles.get(0)).getCanonicalPath();
             FileOutputStream outputStream = new FileOutputStream(path);
             newWorkbook.write(outputStream);
             newWorkbook.close();
@@ -267,7 +266,7 @@ public class IFCommissions {
 
             for (String rep : employees) {
                 InputStream templateStream = IFCommissions.class.getClassLoader().getResourceAsStream("contract_detail_template.xlsx");
-                Workbook workbook = WorkbookFactory.create(Utils.stream2file(templateStream, "template"+rep));
+                Workbook workbook = WorkbookFactory.create(templateStream);
                 Sheet sheet = workbook.getSheetAt(0);
 
                 for (Row aSheet : sheet) {
@@ -353,7 +352,7 @@ public class IFCommissions {
 
                 System.out.println("Writing employee ("+rep+") file...");
                 String file = fileNames.get(employees.indexOf(rep));
-                String path = new File(outputDirectory.getCanonicalPath() + "/" + file).getCanonicalPath();
+                String path = new File(outputDirectory.getCanonicalPath(), file).getCanonicalPath();
                 FileOutputStream outputStream = new FileOutputStream(path);
                 newWorkbook.write(outputStream);
                 newWorkbook.close();

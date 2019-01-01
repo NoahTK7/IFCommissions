@@ -78,8 +78,8 @@
       <component id="59418" class="javax.swing.JButton" binding="cancelButton" default-binding="true">
         <constraints>
           <grid row="9" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="4" fill="0" indent="0" use-parent-layout="false">
-            <minimum-size width="60" height="20"/>
-            <preferred-size width="60" height="20"/>
+            <minimum-size width="80" height="20"/>
+            <preferred-size width="80" height="20"/>
           </grid>
         </constraints>
         <properties>

@@ -7,6 +7,7 @@
 package com.noahkurrack.IFCommissions;
 
 import com.noahkurrack.IFCommissions.data.ConfigItem;
+import jdk.internal.util.xml.impl.Input;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -14,27 +15,33 @@ import org.json.simple.parser.ParseException;
 
 import java.io.*;
 import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 
 public class ConfigManager {
 
     private File configFile;
-    private File defaultConfig;
+    private InputStream defaultConfigStream;
 
     private ArrayList<ConfigItem> items;
 
     public ConfigManager() throws IOException {
         items = new ArrayList<>();
 
-        ClassLoader classLoader = this.getClass().getClassLoader();
-        InputStream defaultConfigStream = IFCommissions.class.getClassLoader().getResourceAsStream("config-defaults.json");
+        defaultConfigStream = IFCommissions.class.getClassLoader().getResourceAsStream("config-defaults.json");
         InputStream configStream = IFCommissions.class.getClassLoader().getResourceAsStream("config.json");
-        this.defaultConfig = Utils.stream2file(defaultConfigStream, "defaultConfig");
         this.configFile = Utils.stream2file(configStream, "config");
 
-        if (new BufferedReader(new FileReader(configFile)).readLine()==null) {
-            configFile = File.createTempFile("config", null);
+        //screw it, new config every run of the program. too much hassle to get the current config to be persistent.
+        try {
+            Files.copy(defaultConfigStream, configFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
+        } catch (IOException e) {
+            e.printStackTrace();
         }
+
+        /*if (new BufferedReader(new FileReader(configFile)).readLine()==null) {
+            configFile = File.createTempFile("config", null);
+        }*/
 
         updateConfig();
     }
@@ -54,7 +61,7 @@ public class ConfigManager {
         }
 
         if (configs==null) {
-            restoreDefaults();
+            //throw new Exception("Your config file are still f'd up");
             return;
         }
 
@@ -95,10 +102,23 @@ public class ConfigManager {
         }
     }
 
+    //TODO: FIX
     public void restoreDefaults() {
         configFile.delete();
         try {
-            Files.copy(defaultConfig.toPath(), configFile.toPath());
+            InputStream configStream = IFCommissions.class.getClassLoader().getResourceAsStream("config.json");
+            this.configFile = Utils.stream2file(configStream, "config");
+
+            //screw it, new config every run of the program. too much hassle to get the current config to be persistent.
+            try {
+                Files.copy(defaultConfigStream, configFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            //this.configFile = Utils.stream2file(defaultConfigStream, "config");
+            //Files.copy(defaultConfig.toPath(), configFile.toPath());
+            //Files.copy(defaultConfigStream, configFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
         } catch (IOException e) {
             e.printStackTrace();
         }

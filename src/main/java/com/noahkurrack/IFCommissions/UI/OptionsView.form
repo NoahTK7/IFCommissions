@@ -37,8 +37,8 @@
       <component id="8da7d" class="javax.swing.JButton" binding="continueButton">
         <constraints>
           <grid row="3" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="4" fill="0" indent="0" use-parent-layout="false">
-            <minimum-size width="70" height="20"/>
-            <preferred-size width="70" height="20"/>
+            <minimum-size width="100" height="20"/>
+            <preferred-size width="100" height="20"/>
           </grid>
         </constraints>
         <properties>
@@ -48,8 +48,8 @@
       <component id="33fb3" class="javax.swing.JButton" binding="backButton">
         <constraints>
           <grid row="3" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="4" fill="0" indent="0" use-parent-layout="false">
-            <minimum-size width="60" height="20"/>
-            <preferred-size width="60" height="20"/>
+            <minimum-size width="80" height="20"/>
+            <preferred-size width="80" height="20"/>
           </grid>
         </constraints>
         <properties>

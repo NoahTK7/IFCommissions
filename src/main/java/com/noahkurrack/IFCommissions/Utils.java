@@ -20,9 +20,9 @@ public class Utils {
     public static File stream2file (InputStream in, String fileName) throws IOException {
         final File tempFile = File.createTempFile(fileName, null);
         tempFile.deleteOnExit();
-        try (FileOutputStream out = new FileOutputStream(tempFile)) {
+        /*try (FileOutputStream out = new FileOutputStream(tempFile)) {
             IOUtils.copy(in, out);
-        }
+        }*/
         return tempFile;
     }
 
