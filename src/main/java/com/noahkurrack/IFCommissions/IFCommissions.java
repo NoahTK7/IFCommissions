@@ -148,8 +148,8 @@ public class IFCommissions {
             return;
         }
 
-        String timestamp = new SimpleDateFormat("EEE, MMM d, HH:mm").format(new Date());
-        String dirName = "/contract data " + timestamp;
+        String timestamp = new SimpleDateFormat("EEE, MMM d, HH_mm").format(new Date());
+        String dirName = File.separator+"contract data " + timestamp;
         this.outputDirectory = new File(this.outputDirectory.getCanonicalPath()+dirName);
 
         if (!this.outputDirectory.isDirectory()) {
@@ -247,6 +247,7 @@ public class IFCommissions {
             System.out.println("Writing detail file...");
             String path = new File(outputDirectory.getCanonicalPath(), outputFiles.get(0)).getCanonicalPath();
             FileOutputStream outputStream = new FileOutputStream(path);
+
             newWorkbook.write(outputStream);
             newWorkbook.close();
         }
