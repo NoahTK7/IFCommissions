@@ -7,7 +7,6 @@
 package com.noahkurrack.IFCommissions;
 
 import com.noahkurrack.IFCommissions.data.ConfigItem;
-import jdk.internal.util.xml.impl.Input;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;

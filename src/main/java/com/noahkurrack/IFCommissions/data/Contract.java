@@ -38,11 +38,13 @@ public class Contract {
     private static ArrayList<Part> notFound;
 
     private double addPercentage;
+    private boolean isServiceTech;
 
     public Contract(Workbook wb, File file) {
         this.parts = new ArrayList<>();
         this.commission = -1;
         this.cost = 0;
+        this.profit = 0;
 
         notFound = new ArrayList<>();
 
@@ -147,26 +149,33 @@ public class Contract {
     }
 
     private void calculateCommission() {
-        this.profit = Math.floor(this.subtotal - this.cost);
-        int profitPercentage = (int) Math.round(this.profit / this.cost * 100);
+        if (!isServiceTech) {
+            this.profit = Math.floor(this.subtotal - this.cost);
+            int profitPercentage = (int) Math.round(this.profit / this.cost * 100);
 
-        if (profitPercentage <= 68) {
-            commissionPercent = 10;
-        } else if (profitPercentage <= 79) {
-            commissionPercent = 11;
-        } else if (profitPercentage <= 94) {
-            commissionPercent = 12;
-        } else if (profitPercentage <= 114) {
-            commissionPercent = 13;
-        } else if (profitPercentage <= 139) {
-            commissionPercent = 14;
+            if (profitPercentage <= 68) {
+                commissionPercent = 10;
+            } else if (profitPercentage <= 79) {
+                commissionPercent = 11;
+            } else if (profitPercentage <= 94) {
+                commissionPercent = 12;
+            } else if (profitPercentage <= 114) {
+                commissionPercent = 13;
+            } else if (profitPercentage <= 139) {
+                commissionPercent = 14;
+            } else {
+                commissionPercent = 15;
+            }
+
+            commissionPercent += addPercentage;
+
+            this.commission = this.profit * (this.commissionPercent/100);
         } else {
-            commissionPercent = 15;
+            this.commissionPercent = 8;
+            commissionPercent += addPercentage;
+
+            this.commission = this.subtotal * (this.commissionPercent/100);
         }
-
-        commissionPercent += addPercentage;
-
-        this.commission = this.profit * (this.commissionPercent/100);
     }
 
     public static void displayPartsNotFound() {
@@ -224,6 +233,14 @@ public class Contract {
 
     public void setAddPercentage(double addPercentage) {
         this.addPercentage = addPercentage;
+    }
+
+    public boolean getIsServiceTech() {
+        return isServiceTech;
+    }
+
+    public void setIsServiceTech(boolean isServiceTech) {
+        this.isServiceTech = isServiceTech;
     }
 
     public ArrayList<Part> getParts() {
