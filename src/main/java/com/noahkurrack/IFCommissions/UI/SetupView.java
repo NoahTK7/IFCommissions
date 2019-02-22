@@ -9,6 +9,7 @@ package com.noahkurrack.IFCommissions.UI;
 import com.noahkurrack.IFCommissions.IFCommissions;
 import com.noahkurrack.IFCommissions.UI.util.CheckListItem;
 import com.noahkurrack.IFCommissions.UI.util.CheckListRenderer;
+import mdlaf.utils.MaterialColors;
 
 import javax.swing.*;
 import java.awt.*;
@@ -41,6 +42,15 @@ public class SetupView {
         instance = IFCommissions.getInstance();
 
         currentDirectory = new File(".");
+
+        // md look and feel
+        runButton.setBackground(MaterialColors.LIGHT_BLUE_400);
+        runButton.setForeground(Color.WHITE);
+
+        cancelButton.setBackground(MaterialColors.LIGHT_BLUE_400);
+        cancelButton.setForeground(Color.WHITE);
+
+
 
         attachListeners();
     }
@@ -168,6 +178,14 @@ public class SetupView {
         errorLabel = new JLabel();
         errorLabel.setFont(new Font(errorLabel.getFont().getFontName(), errorLabel.getFont().getStyle(), 11));
         errorLabel.setForeground(Color.RED);
+
+        browseButton = new JButton();
+        browseButton.setBackground(MaterialColors.LIGHT_BLUE_400);
+        browseButton.setForeground(Color.WHITE);
+
+        browseOutButton = new JButton();
+        browseOutButton.setBackground(MaterialColors.LIGHT_BLUE_400);
+        browseOutButton.setForeground(Color.WHITE);
     }
 
     private boolean saveData() {

@@ -9,12 +9,14 @@ package com.noahkurrack.IFCommissions;
 import com.noahkurrack.IFCommissions.UI.CommissionsGUI;
 import com.noahkurrack.IFCommissions.data.Contract;
 import com.noahkurrack.IFCommissions.data.Part;
+import mdlaf.MaterialLookAndFeel;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.ss.util.CellRangeAddress;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
+import javax.swing.*;
 import java.awt.*;
 import java.io.*;
 import java.text.SimpleDateFormat;
@@ -49,6 +51,14 @@ public class IFCommissions {
         } catch (IOException e) {
             System.out.println("Configuration error. Cannot proceed.");
             e.printStackTrace();
+        }
+
+        try {
+            UIManager.setLookAndFeel (new MaterialLookAndFeel());
+        }
+        catch (UnsupportedLookAndFeelException e) {
+            System.out.println("Could not load Material Design look and feel... continuing with system default.");
+            e.printStackTrace ();
         }
 
         EventQueue.invokeLater(() -> {
