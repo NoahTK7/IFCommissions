@@ -12,10 +12,10 @@ import com.noahkurrack.IFCommissions.data.Part;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.ss.util.CellRangeAddress;
-import org.apache.poi.xssf.usermodel.XSSFSheet;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.apache.poi.xssf.usermodel.*;
 
 import java.awt.*;
+import java.awt.Color;
 import java.io.*;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -157,14 +157,24 @@ public class IFCommissions {
         }
 
         ArrayList<Row> detailTemplate = new ArrayList<>();
+        ArrayList<Row> summaryTemplate = new ArrayList<>();
 
+        //details spreadsheet
         if (spreadsheet) {
-            InputStream templateStream = IFCommissions.class.getClassLoader().getResourceAsStream("contract_detail_template.xlsx");
-            Workbook workbook = WorkbookFactory.create(templateStream);
-            Sheet sheet = workbook.getSheetAt(0);
+            InputStream detailTemplateStream = IFCommissions.class.getClassLoader().getResourceAsStream("contract_detail_template.xlsx");
+            Workbook detailWorkbook = WorkbookFactory.create(detailTemplateStream);
+            Sheet detailSheet = detailWorkbook.getSheetAt(0);
 
-            for (Row aSheet : sheet) {
-                detailTemplate.add(aSheet);
+            for (Row aRow : detailSheet) {
+                detailTemplate.add(aRow);
+            }
+
+            InputStream summaryTemplateStream = IFCommissions.class.getClassLoader().getResourceAsStream("contract_summary_template.xlsx");
+            Workbook summaryWorkbook = WorkbookFactory.create(summaryTemplateStream);
+            Sheet summarySheet = summaryWorkbook.getSheetAt(0);
+
+            for (Row aRow : summarySheet) {
+                summaryTemplate.add(aRow);
             }
 
             XSSFWorkbook newWorkbook = new XSSFWorkbook();
@@ -173,12 +183,81 @@ public class IFCommissions {
             cellCopyPolicy.setCopyCellStyle(false);
             cellCopyPolicy.setCopyCellFormula(false);
 
+            //cell styles
+            XSSFFont bold = newWorkbook.createFont();
+            bold.setBold(true);
+
+            CellStyle tableHeader = newWorkbook.createCellStyle();
+            tableHeader.setBorderBottom(BorderStyle.THIN);
+            //TODO: fix title style
+            CellStyle title = newWorkbook.createCellStyle();
+            title.setBorderBottom(BorderStyle.THIN);
+            ((XSSFCellStyle) title).setFillBackgroundColor(new XSSFColor(Color.gray));
+            title.setFont(bold);
+
+            CellStyle dollarStyle = newWorkbook.createCellStyle();
+            dollarStyle.setDataFormat((short) 8);
+            CellStyle totalStyle = newWorkbook.createCellStyle();
+            totalStyle.setDataFormat((short) 8);
+            totalStyle.setFont(bold);
+            CellStyle percentageStyle = newWorkbook.createCellStyle();
+            percentageStyle.setDataFormat((short) 9);
+
+            int rowIndex = 0; //(1st)
+
             //create empty row at top to trick copyRowFrom function
-            String timeGenerated = new SimpleDateFormat("EEE, MMM d, yyyy 'at' HH:mm:ss a").format(new Date());
-            newSheet.createRow(0).createCell(0).setCellValue("Generated: "+timeGenerated);
-            newSheet.getRow(0).createCell(1);
-            newSheet.addMergedRegion(new CellRangeAddress(0,0,0,1));
-            int rowIndex = 1;
+            //summary title
+            newSheet.createRow(rowIndex).createCell(0).setCellValue("Summary");
+            for (int i = 1; i < 5; i++) {
+                newSheet.getRow(rowIndex).createCell(i);
+            }
+            newSheet.addMergedRegion(new CellRangeAddress(0,0,0,4));
+            newSheet.getRow(rowIndex).getCell(0).setCellStyle(title);
+            rowIndex++; //1 (2nd)
+
+            //table titles
+            newSheet.createRow(rowIndex).copyRowFrom(summaryTemplate.get(0), cellCopyPolicy);
+            for (Cell cell : newSheet.getRow(rowIndex)) {
+                cell.setCellStyle(tableHeader);
+            }
+            rowIndex++; //2 (3rd)
+
+            double total = 0;
+            for (Contract contract: contracts) {
+                newSheet.createRow(rowIndex).copyRowFrom(summaryTemplate.get(1), cellCopyPolicy);
+                newSheet.getRow(rowIndex).getCell(0).setCellValue(contract.getCustomerInfo());
+                newSheet.getRow(rowIndex).getCell(1).setCellValue(contract.getSubtotal());
+                newSheet.getRow(rowIndex).getCell(1).setCellStyle(dollarStyle);
+                newSheet.getRow(rowIndex).getCell(2).setCellValue(contract.getProfit());
+                newSheet.getRow(rowIndex).getCell(2).setCellStyle(dollarStyle);
+                newSheet.getRow(rowIndex).getCell(3).setCellValue(contract.getCommissionPercent()/100);
+                newSheet.getRow(rowIndex).getCell(3).setCellStyle(percentageStyle);
+                newSheet.getRow(rowIndex).getCell(4).setCellValue(contract.getCommission());
+                newSheet.getRow(rowIndex).getCell(4).setCellStyle(dollarStyle);
+                total+=contract.getCommission();
+                rowIndex++;
+            }
+
+            //total row
+            newSheet.createRow(rowIndex).copyRowFrom(summaryTemplate.get(2), cellCopyPolicy);
+            Cell totalCell = newSheet.getRow(rowIndex).getCell(4);
+            totalCell.setCellValue(total);
+            totalCell.setCellStyle(totalStyle);
+            rowIndex++;
+
+            //blank row
+            newSheet.createRow(rowIndex);
+            rowIndex++;
+
+            //detail title
+            newSheet.createRow(rowIndex).createCell(0).setCellValue("Detail");
+            for (int i = 1; i < 5; i++) {
+                newSheet.getRow(rowIndex).createCell(i);
+            }
+            newSheet.addMergedRegion(new CellRangeAddress(rowIndex,rowIndex,0,4));
+            newSheet.getRow(rowIndex).getCell(0).setCellStyle(title);
+            rowIndex++;
+
             for (Contract contract: contracts) {
                 newSheet.createRow(rowIndex).copyRowFrom(detailTemplate.get(0), cellCopyPolicy);
                 newSheet.getRow(rowIndex).getCell(1).setCellValue(contract.getCustomerInfo());
@@ -188,19 +267,11 @@ public class IFCommissions {
                 newSheet.getRow(rowIndex).getCell(1).setCellValue(contract.getSalesRep());
                 rowIndex++;
 
-                CellStyle tableHeader = newWorkbook.createCellStyle();
-                tableHeader.setBorderBottom(BorderStyle.THIN);
-
                 newSheet.createRow(rowIndex).copyRowFrom(detailTemplate.get(2), cellCopyPolicy);
                 for (Cell cell : newSheet.getRow(rowIndex)) {
                     cell.setCellStyle(tableHeader);
                 }
                 rowIndex++;
-
-                CellStyle dollarStyle = newWorkbook.createCellStyle();
-                dollarStyle.setDataFormat((short) 8);
-                CellStyle percentageStyle = newWorkbook.createCellStyle();
-                percentageStyle.setDataFormat((short) 9);
 
                 for (Part part : contract.getParts()) {
                     newSheet.createRow(rowIndex).copyRowFrom(detailTemplate.get(3), cellCopyPolicy);
@@ -243,6 +314,13 @@ public class IFCommissions {
 
                 System.out.println(contract.getCustomerInfo() + " " + contract.getOrderNum() + " " + contract.getSalesRep());
             }
+
+            //Timestamp at end
+            String timeGenerated = new SimpleDateFormat("EEE, MMM d, yyyy 'at' HH:mm:ss a").format(new Date());
+            newSheet.createRow(rowIndex).createCell(0).setCellValue("Generated: "+timeGenerated);
+            newSheet.getRow(0).createCell(1);
+            newSheet.addMergedRegion(new CellRangeAddress(rowIndex,rowIndex,0,1));
+            //TODO: copyright notice
 
             System.out.println("Writing detail file...");
             String path = new File(outputDirectory.getCanonicalPath(), outputFiles.get(0)).getCanonicalPath();
@@ -378,4 +456,4 @@ public class IFCommissions {
     }
 }
 //TODO: sort files alphabetically in setup view;
-//TODO: add config for handwork, driveway
+//TODO: add summary table to employee spreadsheet
