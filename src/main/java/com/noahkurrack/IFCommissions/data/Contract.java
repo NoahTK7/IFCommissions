@@ -39,6 +39,7 @@ public class Contract {
 
     private double addPercentage;
     private boolean isServiceTech;
+    private double manualCostAdjustment;
 
     public Contract(Workbook wb, File file) {
         this.parts = new ArrayList<>();
@@ -49,6 +50,7 @@ public class Contract {
         notFound = new ArrayList<>();
 
         addPercentage = 0;
+        manualCostAdjustment = 0;
 
         this.workbook = wb;
 
@@ -70,6 +72,8 @@ public class Contract {
     }
 
     public void process() {
+        this.parts.add(new Part(manualCostAdjustment));
+
         calculateCost();
         calculateCommission();
     }
@@ -120,6 +124,9 @@ public class Contract {
     private void calculateCost() {
         ArrayList<ConfigItem> items = IFCommissions.getConfigManager().getItems();
         for (Part part : parts) {
+            if (part.getId().equalsIgnoreCase("Manual Cost Adjustment")) {
+                cost += part.getTotalCost();
+            }
             boolean found = false;
             for (ConfigItem item : items) {
                 if (item.getPart().equalsIgnoreCase(part.getId())) {
@@ -249,5 +256,13 @@ public class Contract {
 
     public double getCost() {
         return cost;
+    }
+
+    public double getManualCostAdjustment() {
+        return manualCostAdjustment;
+    }
+
+    public void setManualCostAdjustment(double manualCostAdjustment) {
+        this.manualCostAdjustment = manualCostAdjustment;
     }
 }

@@ -21,6 +21,14 @@ public class Part{
         this.cost = 0;
     }
 
+    //manual adjustment
+    Part(double cost) {
+        this.id = "Manual Cost Adjustment";
+        this.description = "Manual Cost Adjustment";
+        this.quantity = 1;
+        this.setCost(cost);
+    }
+
     public String getId() {
         return id;
     }

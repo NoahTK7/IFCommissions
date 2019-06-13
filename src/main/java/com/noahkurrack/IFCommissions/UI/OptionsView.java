@@ -62,5 +62,7 @@ public class OptionsView {
         contractTable.setModel(model);
 
         contractTable.getColumnModel().getColumn(0).setMinWidth(200);
+        contractTable.getColumnModel().getColumn(1).setMaxWidth(60);
+        contractTable.getColumnModel().getColumn(4).setMinWidth(125);
     }
 }
