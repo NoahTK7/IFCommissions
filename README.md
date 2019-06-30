@@ -4,9 +4,9 @@
 
 ### Summary
 
-The Invisible Fence Commissions Calculator is 
-//TODO
+The Invisible Fence Commissions Calculator is a Java Swing application designed to streamline the process of calculating commissions for employee-sold contracts. The cost of each contract is calculated using a database (json file) of parts and their associated costs. The profit of the contract (subtotal - cost) is used to determine the ratio of profit to cost and percentage of the profit that the employee is awarded for the sale. The application loads the contracts from excel files exported from the Invisible Fence CRM. The aplication also creates detailed reports for each employee that include each contract's determined parts and all calculations (for manual reveiw).
 
+I wrote this application from scratch with the help of the [Java Swing Documentation](https://docs.oracle.com/javase/7/docs/api/javax/swing/package-summary.html) and IntelliJ GUI Forms. Unless otherwise noted (couple of utility classes in Util package), all code is my own.
 
 ### Interface Structure
 
@@ -18,6 +18,10 @@ The Invisible Fence Commissions Calculator is
 ### Instructions
 
 Simply execute the jar file after installing Java 8. 
+
+OR use the IFCommissions Launcher [here](https://github.com/NoahTK7/IFCommissionsLauncher) to receive automatic updates each time the application is launched.
+
+For all downloads, visit http://ifcommissions.noahkurrack.com/jars/ .
 
 ### Credit
 
