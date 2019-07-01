@@ -21,7 +21,7 @@ Simply execute the jar file after installing Java 8.
 
 OR use the IFCommissions Launcher [here](https://github.com/NoahTK7/IFCommissionsLauncher) to receive automatic updates each time the application is launched.
 
-For all downloads, visit http://ifcommissions.noahkurrack.com/jars/ .
+For all downloads, visit https://ifcommissions.noahkurrack.com/jars/ .
 
 ### Credit
 
