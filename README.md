@@ -1,5 +1,8 @@
 ### Demonstration Video: https://youtu.be/2Q9dLzOwM0Y
 
+### Download: https://ifcommissions.noahkurrack.com/jars/
+### Download sample contracts: https://ifcommissions.noahkurrack.com/contracts/
+
 ## About
 
 ### Summary
