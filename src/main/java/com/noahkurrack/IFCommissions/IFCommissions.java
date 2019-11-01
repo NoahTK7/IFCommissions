@@ -95,7 +95,9 @@ public class IFCommissions {
             //System.out.println(file.getName());
             try {
                 Contract contract = new Contract(workbook, file);
-                contracts.add(contract);
+                if (!contract.isFailed()) {
+                    contracts.add(contract);
+                }
             } catch (Exception e) {
                 e.printStackTrace();
             }

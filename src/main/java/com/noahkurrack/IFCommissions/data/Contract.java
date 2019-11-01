@@ -41,6 +41,8 @@ public class Contract {
     private boolean isServiceTech;
     private double manualCostAdjustment;
 
+    private boolean isFailed;
+
     public Contract(Workbook wb, File file) {
         this.parts = new ArrayList<>();
         this.commission = -1;
@@ -64,6 +66,7 @@ public class Contract {
                     JOptionPane.ERROR_MESSAGE
             );
             System.out.println("Could not read spreadsheet ("+ file +")...skipping.");
+            isFailed = true;
         }
 
         boolean error =  false;
@@ -78,7 +81,7 @@ public class Contract {
         calculateCommission();
     }
 
-    private void extractData() {
+    private void extractData() throws Exception {
         //get contract info
         Sheet sheet = workbook.getSheetAt(0);
         Row infoRow = sheet.getRow(19);
@@ -117,7 +120,12 @@ public class Contract {
         }
 
         //get subtotal
-        this.subtotal = sheet.getRow(endRow).getCell(29).getNumericCellValue();
+        this.subtotal = sheet.getRow(endRow).getCell(30).getNumericCellValue();
+
+        if (subtotal == 0) {
+            throw new Exception("found subtotal of 0 (or empty cell)");
+        }
+
         this.subtotal = Math.floor(this.subtotal);
     }
 
@@ -264,5 +272,9 @@ public class Contract {
 
     public void setManualCostAdjustment(double manualCostAdjustment) {
         this.manualCostAdjustment = manualCostAdjustment;
+    }
+
+    public boolean isFailed() {
+        return isFailed;
     }
 }
