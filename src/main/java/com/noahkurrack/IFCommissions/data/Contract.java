@@ -109,7 +109,7 @@ public class Contract {
         for (int i = 23; i <= endRow-2; i++) {
             String part = sheet.getRow(i).getCell(0).getStringCellValue().trim();
             String description = sheet.getRow(i).getCell(5).getStringCellValue().trim();
-            double quantity = sheet.getRow(i).getCell(25).getNumericCellValue();
+            double quantity = sheet.getRow(i).getCell(22).getNumericCellValue();
             //fields with quantities
             //weird but some fields have 0 when quantity should be 1
             if (quantity>1) {
