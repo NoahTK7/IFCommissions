@@ -122,11 +122,11 @@ public class IFCommissions {
         for (Contract contract : contracts) {
             contract.process();
             gui.getRunView().submit(contract);
-            try {
-                Thread.sleep(100); //lol want to see progress bar
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
+//            try {
+//                Thread.sleep(100); //lol want to see progress bar
+//            } catch (InterruptedException e) {
+//                e.printStackTrace();
+//            }
         }
         try {
             new OutputManager(contracts, outputFiles, outputDirectory, spreadsheet, employeeSpreadsheet);

@@ -152,7 +152,10 @@ public class Contract {
                 //System.out.println("error: part not found: " + part.getId() + ". add to config file or part will be ignored.");
                 boolean exists = false;
                 for (Part p: notFound) {
-                    if (p.getId().equals(part.getId())) exists = true;
+                    if (p.getId().equals(part.getId())) {
+                        exists = true;
+                        break;
+                    }
                 }
                 if (!exists) {
                     notFound.add(part);
