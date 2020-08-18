@@ -184,6 +184,43 @@
       "item": "Trade In Discount",
       "description": "Trade In Discount",
       "cost": -100
+    },
+
+
+    {
+      "item": "Boundary Plus Smart Solution",
+      "description": "BP Smart Fence",
+      "cost": 200
+    },
+    {
+      "item": "RIG00-16936",
+      "description": "Control Panel Boundary Plus Smart",
+      "cost": 515
+    },
+    {
+      "item": "RIG00-16937",
+      "description": "Computer Collar Boundary Plus Smart  RCVR",
+      "cost": 323
+    },
+    {
+      "item": "RAC00-16949",
+      "description": "Wired Indoor SmartShields Unit",
+      "cost": 249
+    },
+    {
+      "item": "RAC00-16950",
+      "description": "Wireless Indoor SmartShields Unit",
+      "cost": 249
+    },
+    {
+      "item": "RAC00-16992",
+      "description": "BP 2.0 Mask Wired",
+      "cost": 115
+    },
+    {
+      "item": "RAC00-16993",
+      "description": "BP 2.0 Mask Wireless",
+      "cost": 115
     }
   ]
 }
