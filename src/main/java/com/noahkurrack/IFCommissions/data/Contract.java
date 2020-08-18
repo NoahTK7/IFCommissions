@@ -186,7 +186,7 @@ public class Contract {
 
             this.commission = this.profit * (this.commissionPercent/100);
         } else {
-            this.commissionPercent = 8;
+            this.commissionPercent = 10;
             commissionPercent += addPercentage;
 
             this.commission = this.subtotal * (this.commissionPercent/100);
