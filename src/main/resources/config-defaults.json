@@ -221,6 +221,12 @@
       "item": "RAC00-16993",
       "description": "BP 2.0 Mask Wireless",
       "cost": 115
+    },
+
+    {
+      "item": "TRAINING",
+      "description": "1 Visit Training",
+      "cost": 25
     }
   ]
 }

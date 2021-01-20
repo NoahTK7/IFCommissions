@@ -38,7 +38,8 @@ public class Contract {
     private static ArrayList<Part> notFound;
 
     private double addPercentage;
-    private boolean isServiceTech;
+    private boolean isFlat10;
+    private boolean isFlat12;
     private double manualCostAdjustment;
 
     private boolean isFailed;
@@ -65,11 +66,11 @@ public class Contract {
                     "Contract error",
                     JOptionPane.ERROR_MESSAGE
             );
-            System.out.println("Could not read spreadsheet ("+ file +")...skipping.");
+            System.out.println("Could not read spreadsheet (" + file + ")...skipping.");
             isFailed = true;
         }
 
-        boolean error =  false;
+        boolean error = false;
         //TODO: do checks (e.g. date)
 
     }
@@ -101,18 +102,18 @@ public class Contract {
             } catch (IllegalStateException e) {
                 continue;
             }
-            if (sheet.getRow(i).getCell(0).getStringCellValue().equalsIgnoreCase("Date")){
+            if (sheet.getRow(i).getCell(0).getStringCellValue().equalsIgnoreCase("Date")) {
                 endRow = i;
             }
         }
         //get parts
-        for (int i = 23; i <= endRow-2; i++) {
+        for (int i = 23; i <= endRow - 2; i++) {
             String part = sheet.getRow(i).getCell(0).getStringCellValue().trim();
             String description = sheet.getRow(i).getCell(5).getStringCellValue().trim();
             double quantity = sheet.getRow(i).getCell(22).getNumericCellValue();
             //fields with quantities
             //weird but some fields have 0 when quantity should be 1
-            if (quantity>1) {
+            if (quantity > 1) {
                 this.parts.add(new Part(part, description, quantity));
             } else {
                 this.parts.add(new Part(part, description, 1));
@@ -139,7 +140,7 @@ public class Contract {
             for (ConfigItem item : items) {
                 if (item.getPart().equalsIgnoreCase(part.getId())) {
                     found = true;
-                    if (part.getQuantity()>1) {
+                    if (part.getQuantity() > 1) {
                         part.setCost(item.getCost());
                         cost += part.getTotalCost();
                     } else {
@@ -151,7 +152,7 @@ public class Contract {
             if (!found) {
                 //System.out.println("error: part not found: " + part.getId() + ". add to config file or part will be ignored.");
                 boolean exists = false;
-                for (Part p: notFound) {
+                for (Part p : notFound) {
                     if (p.getId().equals(part.getId())) {
                         exists = true;
                         break;
@@ -167,8 +168,19 @@ public class Contract {
     }
 
     private void calculateCommission() {
-        if (!isServiceTech) {
-            this.profit = Math.floor(this.subtotal - this.cost);
+        this.profit = Math.floor(this.subtotal - this.cost);
+
+        if (isFlat10) {
+            this.commissionPercent = 10;
+
+            commissionPercent += addPercentage;
+            this.commission = this.subtotal * (this.commissionPercent / 100);
+        } else if (isFlat12) {
+            this.commissionPercent = 12;
+
+            commissionPercent += addPercentage;
+            this.commission = this.profit * (this.commissionPercent / 100);
+        } else {
             int profitPercentage = (int) Math.round(this.profit / this.cost * 100);
 
             if (profitPercentage <= 68) {
@@ -186,13 +198,7 @@ public class Contract {
             }
 
             commissionPercent += addPercentage;
-
-            this.commission = this.profit * (this.commissionPercent/100);
-        } else {
-            this.commissionPercent = 10;
-            commissionPercent += addPercentage;
-
-            this.commission = this.subtotal * (this.commissionPercent/100);
+            this.commission = this.profit * (this.commissionPercent / 100);
         }
     }
 
@@ -253,12 +259,20 @@ public class Contract {
         this.addPercentage = addPercentage;
     }
 
-    public boolean getIsServiceTech() {
-        return isServiceTech;
+    public boolean getIsFlat10() {
+        return isFlat10;
     }
 
-    public void setIsServiceTech(boolean isServiceTech) {
-        this.isServiceTech = isServiceTech;
+    public void setIsFlat10(boolean isFlat10) {
+        this.isFlat10 = isFlat10;
+    }
+
+    public boolean getIsFlat12() {
+        return isFlat12;
+    }
+
+    public void setIsFlat12(boolean isFlat12) {
+        this.isFlat12 = isFlat12;
     }
 
     public ArrayList<Part> getParts() {

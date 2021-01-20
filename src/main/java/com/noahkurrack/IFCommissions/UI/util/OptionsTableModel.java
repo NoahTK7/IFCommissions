@@ -16,10 +16,10 @@ public class OptionsTableModel extends AbstractTableModel {
     private final ArrayList<Contract> contractList;
 
     private final String[] columnNames = new String[] {
-            "Customer Info", "Subtotal", "Add Percentage", "Service Tech", "Manual Cost Adjustment"
+            "Customer Info", "Subtotal", "Add Percentage", "Flat 10% (subtotal)", "Flat 12% (profit)", "Manual Cost Adjustment"
     };
     private final Class[] columnClass = new Class[] {
-            String.class, Double.class, Double.class, Boolean.class, Double.class
+            String.class, Double.class, Double.class, Boolean.class, Boolean.class, Double.class
     };
 
     public OptionsTableModel() {
@@ -57,8 +57,10 @@ public class OptionsTableModel extends AbstractTableModel {
             case 2:
                 return row.getAddPercentage();
             case 3:
-                return row.getIsServiceTech();
+                return row.getIsFlat10();
             case 4:
+                return row.getIsFlat12();
+            case 5:
                 return row.getManualCostAdjustment();
             default: return null;
 
@@ -67,8 +69,7 @@ public class OptionsTableModel extends AbstractTableModel {
 
     @Override
     public boolean isCellEditable(int rowIndex, int columnIndex) {
-        if (columnIndex == 2 || columnIndex == 4) return true;
-        return columnIndex == 3;
+        return (columnIndex >= 2);
     }
 
     public void reset() {
@@ -88,8 +89,20 @@ public class OptionsTableModel extends AbstractTableModel {
         if(columnIndex == 2) {
             row.setAddPercentage((double) aValue);
         } else if (columnIndex == 3) {
-            row.setIsServiceTech((boolean) aValue);
+            boolean val = (boolean) aValue;
+            if (val) {
+                this.setValueAt(false, rowIndex, 4);
+                this.fireTableDataChanged();
+            }
+            row.setIsFlat10(val);
         } else if (columnIndex == 4) {
+            boolean val = (boolean) aValue;
+            if (val) {
+                this.setValueAt(false, rowIndex, 3);
+                this.fireTableDataChanged();
+            }
+            row.setIsFlat12(val);
+        } else if (columnIndex == 5) {
             row.setManualCostAdjustment((double) aValue);
         }
     }
