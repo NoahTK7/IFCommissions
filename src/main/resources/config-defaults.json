@@ -3,17 +3,17 @@
     {
       "item": "Additional Wire New per foot",
       "description": "Wire Installed New",
-      "cost": 0.1
+      "cost": 0.12
     },
     {
       "item": "WI",
       "description": "Water installation labor",
-      "cost": 0.6
+      "cost": 0.4
     },
     {
       "item": "PVC",
       "description": "PVC",
-      "cost": 0.6
+      "cost": 0.4
     },
     {
       "item": "Custom Hand Work",
@@ -38,37 +38,37 @@
     {
       "item": "RIG00-11350",
       "description": "B+ Single Loop Trans",
-      "cost": 271
+      "cost": 279
     },
     {
       "item": "Boundary Plus Transmitter",
       "description": "B+ Dual LoopTransmitter",
-      "cost": 304
+      "cost": 313
     },
     {
       "item": "RIG00-11933",
       "description": "Microlite Receiver",
-      "cost": 199
+      "cost": 206
     },
     {
       "item": "RIG00-13546",
       "description": "MicroLite + Plus Receiver",
-      "cost": 224
+      "cost": 232
     },
     {
       "item": "RIG00-13144",
       "description": "ML2 - MicroLite Graphite",
-      "cost": 165
+      "cost": 177
     },
     {
       "item": "RIG00-14107",
       "description": "Shields Computer Collar",
-      "cost": 94
+      "cost": 100
     },
     {
       "item": "RIF00-15976",
       "description": "GPS 3.0 Mobile Collar",
-      "cost": 492
+      "cost": 507
     },
     {
       "item": "LifetimeWarrantyUpgradeGPS",
@@ -78,17 +78,17 @@
     {
       "item": "RAC00-15373",
       "description": "Indoor Shields Plus BC",
-      "cost": 82
+      "cost": 84
     },
     {
       "item": "Outdoor Shield PLUS",
       "description": "Outdoor Shield PLUS",
-      "cost": 104
+      "cost": 107
     },
     {
       "item": "RAC17-14682",
       "description": "Shields Gate Transmitter",
-      "cost": 137
+      "cost": 140
     },
     {
       "item": "Outdoor Box",
@@ -168,12 +168,12 @@
     {
       "item": "RIF00-15977",
       "description": "GPS 3.0 Base",
-      "cost": 658
+      "cost": 678
     },
     {
       "item": "Training (2 Visits)",
       "description": "Perfect Start ™ Training",
-      "cost": 40
+      "cost": 44
     },
     {
       "item": "Driveway",
@@ -205,12 +205,12 @@
     {
       "item": "RAC00-16949",
       "description": "Wired Indoor SmartShields Unit",
-      "cost": 249
+      "cost": 199
     },
     {
       "item": "RAC00-16950",
       "description": "Wireless Indoor SmartShields Unit",
-      "cost": 249
+      "cost": 199
     },
     {
       "item": "RAC00-16992",
@@ -222,11 +222,35 @@
       "description": "BP 2.0 Mask Wireless",
       "cost": 115
     },
-
     {
       "item": "TRAINING",
       "description": "1 Visit Training",
       "cost": 25
+    },
+    {
+      "item": "MicroShield RAC00-13547",
+      "description": "MicroShields",
+      "cost": 65
+    },
+    {
+      "item": "RAC00-17201",
+      "description": "Boundary Plus Doorman Module",
+      "cost": 395
+    },
+    {
+      "item": "RAC00-17202",
+      "description": "Boundary Plus Smart Doorman Module",
+      "cost": 470
+    },
+    {
+      "item": "RAC00-16953",
+      "description": "Wireless Outdoor SmartShields",
+      "cost": 154
+    },
+    {
+      "item": "RAC00-16952",
+      "description": "Wired Outdoor SmartShields Unit",
+      "cost": 154
     }
   ]
 }
